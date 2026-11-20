@@ -58,13 +58,13 @@ describe('App', () => {
   it('страница проектов: фильтр категорий оставляет только нужные карточки', async () => {
     const w = await open('/projects')
     const all = w.findAll('.pcard').length
-    expect(all).toBeGreaterThanOrEqual(6)
+    expect(all).toBeGreaterThanOrEqual(4)
     await w
       .findAll('.fchip')
       .find((b) => b.text().startsWith('Telegram'))!
       .trigger('click')
     await flushPromises()
-    await vi.waitFor(() => expect(w.findAll('.pcard').length).toBe(2))
+    await vi.waitFor(() => expect(w.findAll('.pcard').length).toBe(1))
     expect(w.findAll('.pcard').length).toBeLessThan(all)
   })
 
@@ -101,13 +101,12 @@ describe('App', () => {
     expect(w.find('[role="alert"]').exists()).toBe(true)
   })
 
-  it('музыка: демо-плеер запускается, ставится на паузу и переключает трек', async () => {
+  it('музыка: показан альбом с треклистом, плеер SoundCloud включается по кнопке', async () => {
     const w = await open('/music')
-    await w.get('.ctl.main').trigger('click')
-    expect(w.get('.mx-card').classes()).toContain('playing')
-    await w.findAll('.ctl')[2]!.trigger('click')
-    expect(w.get('.mx-now b').text()).toBe('Cloud Index')
-    await w.get('.ctl.main').trigger('click')
-    expect(w.get('.mx-card').classes()).not.toContain('playing')
+    expect(w.get('.mx-card h2').text()).toBe('1234')
+    expect(w.findAll('.mx-tracks li').length).toBe(10)
+    expect(w.find('.sc-embed iframe').exists()).toBe(false)
+    await w.get('.sc-facade button').trigger('click')
+    expect(w.get('.sc-embed iframe').attributes('src')).toContain('w.soundcloud.com/player')
   })
 })

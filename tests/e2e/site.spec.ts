@@ -12,15 +12,7 @@ async function scrollThrough(page: Page) {
   })
 }
 
-const routes = [
-  '/',
-  '/projects',
-  '/projects/label-erp-panel',
-  '/music',
-  '/about',
-  '/contact',
-  '/no-such-page',
-]
+const routes = ['/', '/projects', '/projects/label-erp', '/music', '/about', '/contact', '/no-such-page']
 const viewports = [
   { name: 'desktop', width: 1440, height: 900 },
   { name: 'tablet', width: 820, height: 1100 },
@@ -90,8 +82,8 @@ test.describe('функциональность', () => {
   })
 
   test('прямая ссылка на внутреннюю страницу открывается', async ({ page }) => {
-    await page.goto('/projects/artist-crm')
-    await expect(page.locator('h1')).toHaveText('Artist CRM')
+    await page.goto('/projects/portfolio-site')
+    await expect(page.locator('h1')).toHaveText('Personal Portfolio')
   })
 
   test('неизвестный адрес и неизвестный проект дают страницу 404', async ({ page }) => {
@@ -106,51 +98,55 @@ test.describe('функциональность', () => {
     await expect(page.locator('.pcard').first()).toBeVisible()
     const all = await page.locator('.pcard').count()
     await page.getByRole('button', { name: /Telegram Bots/ }).click()
-    await expect(page.locator('.pcard')).toHaveCount(2)
-    await expect(page.locator('.pcard .cat-tag')).toHaveText(['Telegram Bots', 'Telegram Bots'])
+    await expect(page.locator('.pcard')).toHaveCount(1)
+    await expect(page.locator('.pcard .cat-tag')).toHaveText(['Telegram Bots'])
     await page.getByRole('button', { name: /^All/ }).click()
     await expect(page.locator('.pcard')).toHaveCount(all)
   })
 
-  test('у настоящего проекта есть рабочие ссылки, у примеров их нет', async ({ page }) => {
+  test('у открытого проекта есть рабочие ссылки, у проектов под NDA их нет', async ({ page }) => {
     await page.goto('/projects')
     const real = page.locator('.pcard', { hasText: 'Game Studio Website' })
     await expect(real.locator('a[href^="https://"]')).toHaveCount(2)
-    const sample = page.locator('.pcard', { hasText: 'Label ERP Panel' })
-    await expect(sample.locator('a[href^="https://"]')).toHaveCount(0)
-    await expect(sample.locator('.badge')).toBeVisible()
+    const nda = page.locator('.pcard', { hasText: 'Telegram' })
+    await expect(nda.locator('a[href^="https://"]')).toHaveCount(0)
+    await expect(nda.locator('.badge.nda')).toBeVisible()
   })
 
   test('страница проекта показывает схему и ссылку на следующий проект', async ({ page }) => {
     await page.goto('/projects/game-studio-website')
     await expect(page.locator('.arch li')).toHaveCount(4)
     await page.locator('.pj-next a').click()
-    await expect(page).toHaveURL(/\/projects\/label-erp-panel$/)
+    await expect(page).toHaveURL(/\/projects\/label-erp$/)
   })
 
-  test('демо-плеер: запуск, пауза, переключение трека, перемотка', async ({ page }) => {
+  test('музыка: альбом с треклистом, смена релиза, фильтр и ссылки на площадки', async ({ page }) => {
     await page.goto('/music')
-    const play = page.locator('.ctl.main')
-    await play.click()
-    await expect(page.locator('.mx-card')).toHaveClass(/playing/)
-    await page.getByRole('button', { name: 'Next track' }).click()
-    await expect(page.locator('.mx-now b')).toHaveText('Cloud Index')
-    await play.click()
-    await expect(page.locator('.mx-card')).not.toHaveClass(/playing/)
-    await page.locator('.wavebars').focus()
-    await page.keyboard.press('ArrowRight')
-    await expect(page.locator('.wavebars')).toHaveAttribute('aria-valuenow', '5')
-  })
-
-  test('музыка: фильтр дискографии и ссылка на SoundCloud', async ({ page }) => {
-    await page.goto('/music')
+    await expect(page.locator('.mx-card h2')).toHaveText('1234')
+    await expect(page.locator('.mx-tracks li')).toHaveCount(10)
     await page.getByRole('button', { name: 'Singles' }).click()
-    await expect(page.locator('.rel')).toHaveCount(2)
-    const href = await page
-      .getByRole('link', { name: /SoundCloud/ })
-      .first()
-      .getAttribute('href')
-    expect(href).toContain('soundcloud.com')
+    await expect(page.locator('.rel')).toHaveCount(3)
+    await page.locator('.rel-cover').first().click()
+    await expect(page.locator('.mx-tracks li')).toHaveCount(1)
+    const hrefs = await page
+      .locator('.plat')
+      .evaluateAll((els) => els.map((e) => (e as HTMLAnchorElement).href))
+    expect(hrefs.some((h) => h.includes('soundcloud.com'))).toBe(true)
+    expect(hrefs.some((h) => h.includes('spotify.com'))).toBe(true)
+  })
+
+  test('музыка: плеер SoundCloud подгружается только по клику', async ({ page }) => {
+    await page.goto('/music')
+    await expect(page.locator('.sc-embed iframe')).toHaveCount(0)
+    await page.getByRole('button', { name: 'Load the SoundCloud player' }).click()
+    await expect(page.locator('.sc-embed iframe')).toHaveAttribute('src', /w\.soundcloud\.com\/player/)
+  })
+
+  test('обо мне: можно скачать резюме на выбранном языке', async ({ page }) => {
+    await page.goto('/about')
+    await expect(page.locator('.cv-btn')).toHaveAttribute('href', /Bogdan-Korzun-CV-EN\.pdf$/)
+    await page.getByRole('button', { name: 'RU' }).click()
+    await expect(page.locator('.cv-btn')).toHaveAttribute('href', /Bogdan-Korzun-CV-RU\.pdf$/)
   })
 
   test('контакты: копирование почты показывает подтверждение', async ({ page, context }) => {

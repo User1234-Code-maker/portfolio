@@ -33,6 +33,7 @@ const count = (c: Category | 'all') =>
           {{ t(`cat_${c}`) }}<small>{{ count(c) }}</small>
         </button>
       </div>
+      <h2 class="sr-only">{{ t('p_title') }}</h2>
       <Transition name="grid" mode="out-in">
         <div :key="active" class="cards big" aria-live="polite">
           <ProjectCard v-for="(p, i) in shown" :key="p.slug" :project="p" :index="i" priority />

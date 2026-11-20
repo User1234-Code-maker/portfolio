@@ -2013,3 +2013,34 @@ nav > a[aria-current]::after {
 /* без размытия под карточками: оно пересчитывается на каждом кадре прокрутки */
 .cat-tag,.mx-card{backdrop-filter:none;-webkit-backdrop-filter:none}
 .mx-card{background:rgba(255,255,255,.78)}
+
+/* ─────────── музыка: реальные релизы ─────────── */
+.rc-real{background:#fff}
+.rc-real img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block}
+.rc-real::before{display:none}
+.mx-blurb{margin:14px 0 0;max-width:52ch;line-height:1.6;color:var(--soft);font-weight:500}
+.mx-links .sc-btn{margin:0}
+.mx-links{display:flex;flex-wrap:wrap;gap:10px;margin-top:20px}
+.tracks .row{display:grid;grid-template-columns:34px 1fr auto;align-items:center;gap:12px;width:100%;font:800 16px Mn;color:var(--ink);padding:13px 18px;background:rgba(255,255,255,.62);border:1px solid rgba(255,255,255,.95);border-radius:18px}
+.tracks .n{color:var(--violet)}
+.tracks .len{font-weight:500;color:var(--soft)}
+.mx-tracks .len:empty{display:none}
+.sc-embed{border-radius:26px;overflow:hidden}
+.sc-embed iframe{display:block;border:0;border-radius:26px}
+.sc-facade{display:flex;flex-direction:column;align-items:flex-start;gap:14px;padding:30px;border-radius:26px;background:rgba(255,255,255,.7);border:1px solid #fff;box-shadow:0 14px 34px -22px rgba(30,42,107,.55)}
+.sc-facade p{margin:0;color:var(--soft);font-weight:500;font-size:14px}
+.plat-row{display:flex;flex-wrap:wrap;gap:12px}
+.plat{display:inline-flex;align-items:center;gap:8px;padding:12px 20px;border-radius:999px;background:rgba(255,255,255,.78);border:1px solid #fff;font-weight:800;font-size:15px;box-shadow:0 10px 24px -16px rgba(30,42,107,.6);transition:translate .2s,box-shadow .2s}
+.plat:hover{translate:0 -3px;box-shadow:0 16px 30px -16px rgba(30,42,107,.65)}
+.plat:focus-visible{outline:2px solid var(--violet);outline-offset:2px}
+.tm-main-cover{display:block;width:92px;flex:none}
+.tm-main-cover .rc-art{border-radius:14px}
+.teaser-player .meta small{display:block;margin-top:6px;font-size:13px;color:var(--soft);font-weight:500}
+
+/* NDA-проекты, резюме, настоящие скриншоты */
+.badge.nda{background:var(--ink);color:#fff}
+.nda-line{display:inline-block}
+.cv-btn{margin-top:20px;display:inline-flex;gap:8px;align-items:center}
+.shot.real{padding:0;overflow:hidden;background:#fff;aspect-ratio:1200/750}
+.shot.real::after{display:none}
+.shot.real img{width:100%;height:100%;object-fit:cover;display:block}

@@ -31,6 +31,10 @@ export interface Project {
   cover?: string
   /** true — демонстрационный кейс: ссылок нет, стоит бейдж «Пример» */
   sample?: boolean
+  /** true — проект под NDA: ссылок и скриншотов нет, стоит бейдж NDA */
+  nda?: boolean
+  /** настоящие скриншоты (если есть) */
+  shots?: string[]
   /** оттенок градиента обложки (0–360) */
   hue: number
   featured?: boolean
@@ -45,7 +49,13 @@ export type ReleaseKind = 'album' | 'single' | 'ep'
 
 export interface Track {
   title: string
-  length: string
+  /** «м:сс»; если длина неизвестна, поле не заполняется */
+  length?: string
+}
+
+export interface ReleaseLink {
+  name: string
+  url: string
 }
 
 export interface Release {
@@ -59,6 +69,12 @@ export interface Release {
   tracks: Track[]
   /** true — демонстрационный релиз, аудио нет */
   sample: boolean
+  /** обложки: большая и маленькая, если файла нет — рисуется заглушка */
+  cover?: string
+  coverSm?: string
+  /** ссылки на площадки */
+  links?: ReleaseLink[]
+  blurb?: Bi
 }
 
 export interface Job {

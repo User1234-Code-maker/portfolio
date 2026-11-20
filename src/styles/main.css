@@ -340,3 +340,4 @@ h1 em{font-style:normal;color:var(--violet)}
 .o3{width:380px;height:380px;left:18%;top:70%;background:#BDE0FF;animation-delay:-14s}
 @keyframes float{from{translate:0 0}to{translate:40px -50px}}
 @media (max-width:600px){.orb{opacity:.4;filter:blur(48px)}}
+@media (max-width:700px){.l-city{background-image:url(../assets/img/city-sm.webp)}.l-far{background-image:url(../assets/img/city-sm.webp)}}

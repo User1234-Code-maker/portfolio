@@ -17,12 +17,7 @@ const p = computed(() => props.project)
     :class="{ stub: p.sample }"
     :style="{ '--i': index ?? 0, '--h': p.hue }"
   >
-    <RouterLink
-      class="cover-link"
-      :to="`/projects/${p.slug}`"
-      :aria-label="`${t('p_open')}: ${p.title}`"
-      tabindex="-1"
-    >
+    <RouterLink class="cover-link" :to="`/projects/${p.slug}`" aria-hidden="true" tabindex="-1">
       <div class="thumb" :class="{ ph: !p.cover }">
         <LazyImg v-if="p.cover" :src="p.cover" :width="1160" :height="308" :eager="priority && index === 0" />
         <template v-else>
@@ -31,6 +26,7 @@ const p = computed(() => props.project)
         </template>
         <span class="cat-tag">{{ t(`cat_${p.category}`) }}</span>
         <span v-if="p.sample" class="badge">{{ t('p_sample') }}</span>
+        <span v-else-if="p.nda" class="badge nda">{{ t('p_nda') }}</span>
       </div>
     </RouterLink>
     <div class="body">
@@ -41,7 +37,10 @@ const p = computed(() => props.project)
       <div class="chips">
         <span v-for="tech in p.tech" :key="tech">{{ tech }}</span>
       </div>
-      <div class="links">
+      <div v-if="p.nda" class="links">
+        <span class="off nda-line">{{ t('p_nda_links') }}</span>
+      </div>
+      <div v-else class="links">
         <a v-if="p.demo" class="solid" :href="p.demo" target="_blank" rel="noopener">{{ t('p_demo_btn') }}</a>
         <span v-else class="off" aria-disabled="true">{{ t('p_demo_btn') }} · {{ t('p_nolink') }}</span>
         <a v-if="p.repo" :href="p.repo" target="_blank" rel="noopener">{{ t('p_code_btn') }}</a>

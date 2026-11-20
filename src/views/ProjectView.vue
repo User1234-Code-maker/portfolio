@@ -36,6 +36,7 @@ const next = computed(() => projects[(idx.value + 1) % projects.length]!)
             <span class="ph-title" aria-hidden="true">{{ project.title }}</span>
           </template>
           <span v-if="project.sample" class="badge">{{ t('p_sample') }}</span>
+          <span v-else-if="project.nda" class="badge nda">{{ t('p_nda') }}</span>
         </div>
       </header>
 
@@ -43,7 +44,8 @@ const next = computed(() => projects[(idx.value + 1) % projects.length]!)
         <section v-reveal class="pj-main">
           <p class="pj-long">{{ project.long[lang] }}</p>
           <p v-if="project.sample" class="note">{{ t('p_sample_note') }}</p>
-          <div class="links big-links">
+          <p v-else-if="project.nda" class="note">{{ t('p_nda_note') }}</p>
+          <div v-if="!project.nda" class="links big-links">
             <a v-if="project.demo" class="solid" :href="project.demo" target="_blank" rel="noopener">{{
               t('p_demo_btn')
             }}</a>
@@ -81,9 +83,14 @@ const next = computed(() => projects[(idx.value + 1) % projects.length]!)
         <p class="arch-note">{{ t('p_arch_note') }}</p>
       </section>
 
-      <section v-reveal class="wrap pj-sec" aria-labelledby="shots-t">
+      <section v-if="!project.nda" v-reveal class="wrap pj-sec" aria-labelledby="shots-t">
         <h2 id="shots-t">{{ t('p_shots') }}</h2>
-        <div class="shots stagger">
+        <div v-if="project.shots?.length" class="shots stagger">
+          <figure v-for="(s, i) in project.shots" :key="s" class="shot real" :style="{ '--i': i }">
+            <LazyImg :src="s" :width="1200" :height="750" :alt="`${project.title} · ${i + 1}`" />
+          </figure>
+        </div>
+        <div v-else class="shots stagger">
           <figure v-for="n in 3" :key="n" class="shot" :style="{ '--i': n, '--h': project.hue + n * 14 }">
             <span class="shot-bar" aria-hidden="true"><i></i><i></i><i></i></span>
             <figcaption>{{ t('p_shot_soon') }}</figcaption>

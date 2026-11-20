@@ -15,9 +15,9 @@ const contacts: Contacts = {
   email: 'bogdan.korzun2003@gmail.com',
   github: 'https://github.com/User1234-Code-maker',
   linkedin: 'https://www.linkedin.com/in/bogdankorzun/',
-  telegram: 'https://t.me/+66944867814',
+  telegram: 'https://t.me/OpalineDream',
   whatsapp: 'https://wa.me/79241181324',
-  soundcloud: 'https://on.soundcloud.com/ZQIAtOfMUtpjdmA5vQ',
+  soundcloud: 'https://soundcloud.com/user1234user1234user1234',
 }
 
 export const site = {

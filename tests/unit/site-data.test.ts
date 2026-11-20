@@ -34,9 +34,9 @@ describe('данные сайта', () => {
       expect(categories).toContain(p.category)
     }
   })
-  it('демонстрационные проекты без ссылок, настоящие со ссылкой', () => {
+  it('проекты под NDA и демонстрационные без ссылок, остальные со ссылкой', () => {
     for (const p of projects) {
-      if (p.sample) {
+      if (p.sample || p.nda) {
         expect(p.repo).toBeUndefined()
         expect(p.demo).toBeUndefined()
       } else {
@@ -49,7 +49,7 @@ describe('данные сайта', () => {
     for (const r of releases) {
       expect(Number.isNaN(Date.parse(r.date)), r.id).toBe(false)
       expect(r.tracks.length).toBeGreaterThan(0)
-      for (const t of r.tracks) expect(t.length).toMatch(/^\d+:\d{2}$/)
+      for (const t of r.tracks) if (t.length) expect(t.length).toMatch(/^\d+:\d{2}$/)
     }
   })
   it('все контакты заполнены (ссылка на SoundCloud не заглушка)', () => {

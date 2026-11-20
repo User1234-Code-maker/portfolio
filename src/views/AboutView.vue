@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { computed, ref } from 'vue'
 import PageHead from '../components/PageHead.vue'
 import PageShell from '../components/PageShell.vue'
 import { useLang } from '../composables/useLang'
@@ -18,6 +18,9 @@ import icRedis from '../assets/img/ic-redis.webp'
 
 const { lang, t } = useLang()
 const open = ref(milestones.length - 1)
+const cvHref = computed(
+  () => `${import.meta.env.BASE_URL}cv/Bogdan-Korzun-CV-${lang.value === 'ru' ? 'RU' : 'EN'}.pdf`,
+)
 const stack = [
   { name: 'TypeScript', src: icTs },
   { name: 'React', src: icReact },
@@ -38,6 +41,9 @@ const stack = [
         <p>{{ t('a_text') }}</p>
         <span class="avail"
           ><i></i><span>{{ t('a_open') }}</span></span
+        >
+        <a class="pill big cv-btn" :href="cvHref" download
+          >{{ t('a_cv') }} <span aria-hidden="true">↓</span></a
         >
       </div>
       <div class="intro-art" aria-hidden="true">
