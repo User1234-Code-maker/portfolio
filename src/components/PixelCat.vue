@@ -13,6 +13,7 @@ const { t } = useLang()
 
 type Spot = { side: 'left' | 'right'; bottom: string; peek: boolean }
 const spots: Record<string, Spot> = {
+  home: { side: 'right', bottom: '30vh', peek: false },
   projects: { side: 'right', bottom: '22vh', peek: true },
   project: { side: 'left', bottom: '0px', peek: false },
   music: { side: 'left', bottom: '34vh', peek: true },
@@ -21,6 +22,7 @@ const spots: Record<string, Spot> = {
   'not-found': { side: 'left', bottom: '0px', peek: false },
 }
 const spot = computed(() => spots[String(route.name)])
+const heroW = ref(0) // на главной котик такого же размера, как был в Hero
 const flip = computed(() => (free.value ? faceRight.value : spot.value?.side === 'left'))
 
 const el = ref<HTMLElement | null>(null)
@@ -294,6 +296,47 @@ function onMove(e: PointerEvent) {
   })
 }
 
+// На главной котик раньше был картинкой в Hero. Теперь это тот же живой котик: он встаёт ровно туда,
+// где стояла картинка, а сама картинка прячется. Если его уже куда-то унесли, остаётся где был.
+let adoptTries = 0
+function adoptHero() {
+  const hero = document.querySelector<HTMLElement>('.cat')
+  const box = el.value
+  if (!hero || !box) {
+    if (adoptTries++ < 40) requestAnimationFrame(adoptHero)
+    return
+  }
+  const r = hero.getBoundingClientRect()
+  if (!r.width) {
+    if (adoptTries++ < 40) requestAnimationFrame(adoptHero)
+    return
+  }
+  heroW.value = r.width
+  px = r.left
+  py = r.top
+  free.value = true
+  faceRight.value = false
+  out.value = false
+  void nextTick().then(() => {
+    clamp()
+    place()
+    document.documentElement.classList.add('cat-adopted')
+  })
+}
+function onRoute(name: unknown) {
+  if (name !== 'home') {
+    heroW.value = 0
+    document.documentElement.classList.remove('cat-adopted')
+    return
+  }
+  if (free.value) {
+    document.documentElement.classList.add('cat-adopted')
+    return
+  }
+  adoptTries = 0
+  void nextTick().then(adoptHero)
+}
+
 function onResize() {
   if (!free.value) return
   clamp()
@@ -306,11 +349,13 @@ onMounted(() => {
   window.addEventListener('pointerdown', onPageDown, { passive: true })
   rest()
   wander()
+  onRoute(route.name)
 })
 onBeforeUnmount(() => {
   window.removeEventListener('pointermove', onMove)
   window.removeEventListener('resize', onResize)
   window.removeEventListener('pointerdown', onPageDown)
+  document.documentElement.classList.remove('cat-adopted')
   window.clearTimeout(wanderTimer)
   cancelAnimationFrame(raf)
   cancelAnimationFrame(moveRaf)
@@ -320,9 +365,10 @@ onBeforeUnmount(() => {
 })
 watch(
   () => route.name,
-  () => {
+  (name) => {
     out.value = false
     said.value = ''
+    onRoute(name)
   },
 )
 </script>
@@ -336,7 +382,7 @@ watch(
       `s-${spot.side}`,
       { peek: spot.peek && !free, out, hop, free, dragging, sleepy, below, walking, flip },
     ]"
-    :style="{ bottom: free ? undefined : spot.bottom }"
+    :style="{ bottom: free ? undefined : spot.bottom, width: heroW ? heroW + 'px' : undefined }"
     @transitionend="onWalkEnd"
   >
     <span v-if="said" class="pcat-say" :class="{ scream: dragging }" role="status">{{ said }}</span>

@@ -2501,3 +2501,52 @@ nav > a[aria-current]::after {
   line-height: 1.2;
   text-align: center;
 }
+
+/* строка трека как в музыкальных приложениях: номер, название, кнопки, время справа */
+.tl-line {
+  position: relative;
+  gap: 10px;
+  padding-right: 18px;
+}
+.tl-main {
+  grid-template-columns: 34px minmax(0, 1fr);
+}
+/* вся строка кликабельна: растягиваем кнопку трека на всю строку */
+.tl-main::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 18px;
+}
+.tl-main:focus-visible {
+  outline: none;
+}
+.tl-main:focus-visible::before {
+  outline: 2px solid var(--violet);
+  outline-offset: -2px;
+}
+.tl-act {
+  position: relative;
+  z-index: 1;
+}
+.tl-len {
+  min-width: 52px;
+  text-align: right;
+  white-space: nowrap;
+}
+.tl-row.on .tl-len {
+  min-width: 96px;
+}
+@media (max-width: 700px) {
+  .tl-line {
+    gap: 6px;
+    padding-right: 12px;
+  }
+  .tl-len {
+    min-width: 40px;
+    font-size: 13px;
+  }
+  .tl-row.on .tl-len {
+    min-width: 84px;
+  }
+}

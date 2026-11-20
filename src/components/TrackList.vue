@@ -40,7 +40,6 @@ const onSeek = (e: Event) => seek(Number((e.target as HTMLInputElement).value))
             <UiIcon class="ic-pause" name="pause" />
           </span>
           <span class="tl-t">{{ tr.title }}</span>
-          <span class="tl-len">{{ isCur(i) ? fmt(p.time) + ' / ' : '' }}{{ tr.length }}</span>
         </button>
         <span v-if="tr.src" class="tl-act">
           <button
@@ -61,6 +60,7 @@ const onSeek = (e: Event) => seek(Number((e.target as HTMLInputElement).value))
             <UiIcon name="download" />
           </a>
         </span>
+        <span class="tl-len">{{ isCur(i) ? fmt(p.time) + ' / ' : '' }}{{ tr.length }}</span>
       </div>
       <div v-if="isCur(i)" class="tl-prog" :style="{ '--p': pct + '%' }">
         <input

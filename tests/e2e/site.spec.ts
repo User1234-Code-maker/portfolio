@@ -356,3 +356,24 @@ test.describe('котик живёт сам', () => {
     expect(box.y + box.height).toBeLessThanOrEqual(762)
   })
 })
+
+test.describe('котик на главной', () => {
+  test('на главной живёт тот же котик: встаёт на место картинки и его можно унести', async ({ page }) => {
+    await page.addInitScript(() => localStorage.setItem('boot-v1', '1'))
+    await page.setViewportSize({ width: 1440, height: 800 })
+    await page.goto('/')
+    await expect(page.locator('.pcat.free')).toBeVisible()
+    await expect(page.locator('html.cat-adopted')).toHaveCount(1)
+    const hero = (await page.locator('.cat').boundingBox())!
+    const live = (await page.locator('.pcat-btn img').boundingBox())!
+    expect(Math.abs(live.x - hero.x)).toBeLessThan(40)
+    expect(Math.abs(live.y - hero.y)).toBeLessThan(40)
+    await page.mouse.move(live.x + 20, live.y + 20)
+    await page.mouse.down()
+    await page.mouse.move(live.x - 200, live.y + 120, { steps: 8 })
+    await expect(page.locator('.pcat-say.scream')).toBeVisible()
+    await page.mouse.up()
+    const after = (await page.locator('.pcat-btn img').boundingBox())!
+    expect(after.x).toBeLessThan(live.x - 150)
+  })
+})
