@@ -346,12 +346,12 @@ h1 em{font-style:normal;color:var(--violet)}
 html.cat-adopted .cat{visibility:hidden}
 
 /* низ Hero плавно растворяется в цвет страницы, без резкого среза при скролле */
-.hero::after{content:"";position:absolute;left:0;right:0;bottom:-2px;height:20vh;z-index:9;pointer-events:none;
+.hero::after{content:"";position:absolute;left:0;right:0;bottom:-2px;height:30vh;z-index:9;pointer-events:none;
  background:linear-gradient(to bottom,rgba(231,234,253,0) 0%,rgba(231,234,253,.22) 30%,rgba(231,234,253,.62) 62%,rgba(231,234,253,.92) 86%,#E7EAFD 100%)}
 
 /* нижний край персонажа растворяется: при прокрутке слой уезжает вверх и больше не виден его срез */
 .l-char img.main{-webkit-mask-image:linear-gradient(to bottom,#000 0,#000 78%,transparent 100%);mask-image:linear-gradient(to bottom,#000 0,#000 78%,transparent 100%)}
 
 /* внизу Hero дорисован силуэт города цвета страницы: край не пустой, а как будто сам сайт «вырастает» из города */
-.hero::before{content:"";position:absolute;left:0;right:0;bottom:-1px;height:clamp(96px,17vh,190px);z-index:10;pointer-events:none;
+.hero::before{content:"";position:absolute;left:0;right:0;bottom:-1px;height:clamp(64px,9vh,104px);z-index:10;pointer-events:none;
  background:url(../assets/img/skyline.svg) right bottom/max(100%,980px) 100% no-repeat}
