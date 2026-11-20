@@ -26,14 +26,14 @@ const next = computed(() => projects[(idx.value + 1) % projects.length]!)
         >
         <div class="pj-title">
           <span class="cat-tag static">{{ t(`cat_${project.category}`) }}</span>
-          <h1>{{ project.title }}</h1>
+          <h1>{{ tx(project.title, lang) }}</h1>
           <p class="lead">{{ project[lang] }}</p>
         </div>
         <div class="pj-cover" :class="{ ph: !project.cover }">
           <LazyImg v-if="project.cover" :src="project.cover" :width="1160" :height="308" eager />
           <template v-else>
             <span class="ph-art" aria-hidden="true"><i></i><i></i><i></i></span>
-            <span class="ph-title" aria-hidden="true">{{ project.title }}</span>
+            <span class="ph-title" aria-hidden="true">{{ tx(project.title, lang) }}</span>
           </template>
           <span v-if="project.sample" class="badge">{{ t('p_sample') }}</span>
           <span v-else-if="project.nda" class="badge nda">{{ t('p_nda') }}</span>
@@ -87,7 +87,7 @@ const next = computed(() => projects[(idx.value + 1) % projects.length]!)
         <h2 id="shots-t">{{ t('p_shots') }}</h2>
         <div v-if="project.shots?.length" class="shots stagger">
           <figure v-for="(s, i) in project.shots" :key="s" class="shot real" :style="{ '--i': i }">
-            <LazyImg :src="s" :width="1200" :height="750" :alt="`${project.title} · ${i + 1}`" />
+            <LazyImg :src="s" :width="1200" :height="750" :alt="`${tx(project.title, lang)} · ${i + 1}`" />
           </figure>
         </div>
         <div v-else class="shots stagger">
@@ -101,7 +101,7 @@ const next = computed(() => projects[(idx.value + 1) % projects.length]!)
       <nav class="wrap pj-next" :aria-label="t('p_next')">
         <RouterLink :to="`/projects/${next.slug}`">
           <small>{{ t('p_next') }}</small>
-          <b>{{ next.title }} <span aria-hidden="true">→</span></b>
+          <b>{{ tx(next.title, lang) }} <span aria-hidden="true">→</span></b>
         </RouterLink>
       </nav>
     </article>

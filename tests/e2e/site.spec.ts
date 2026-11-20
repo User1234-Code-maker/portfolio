@@ -83,7 +83,7 @@ test.describe('функциональность', () => {
 
   test('прямая ссылка на внутреннюю страницу открывается', async ({ page }) => {
     await page.goto('/projects/portfolio-site')
-    await expect(page.locator('h1')).toHaveText('Personal Portfolio')
+    await expect(page.locator('h1')).toHaveText('Personal portfolio site')
   })
 
   test('неизвестный адрес и неизвестный проект дают страницу 404', async ({ page }) => {
@@ -106,7 +106,7 @@ test.describe('функциональность', () => {
 
   test('у открытого проекта есть рабочие ссылки, у проектов под NDA их нет', async ({ page }) => {
     await page.goto('/projects')
-    const real = page.locator('.pcard', { hasText: 'Game Studio Website' })
+    const real = page.locator('.pcard', { hasText: 'Game Studio' })
     await expect(real.locator('a[href^="https://"]')).toHaveCount(2)
     const nda = page.locator('.pcard', { hasText: 'Telegram' })
     await expect(nda.locator('a[href^="https://"]')).toHaveCount(0)
@@ -123,11 +123,11 @@ test.describe('функциональность', () => {
   test('музыка: альбом с треклистом, смена релиза, фильтр и ссылки на площадки', async ({ page }) => {
     await page.goto('/music')
     await expect(page.locator('.mx-card h2')).toHaveText('1234')
-    await expect(page.locator('.mx-tracks li')).toHaveCount(10)
+    await expect(page.locator('.tl-row')).toHaveCount(10)
     await page.getByRole('button', { name: 'Singles' }).click()
     await expect(page.locator('.rel')).toHaveCount(3)
     await page.locator('.rel-cover').first().click()
-    await expect(page.locator('.mx-tracks li')).toHaveCount(1)
+    await expect(page.locator('.tl-row')).toHaveCount(1)
     const hrefs = await page
       .locator('.plat')
       .evaluateAll((els) => els.map((e) => (e as HTMLAnchorElement).href))
@@ -135,11 +135,28 @@ test.describe('функциональность', () => {
     expect(hrefs.some((h) => h.includes('spotify.com'))).toBe(true)
   })
 
-  test('музыка: плеер SoundCloud подгружается только по клику', async ({ page }) => {
+  test('музыка: свой плеер играет трек, ставится на паузу и показывает мини-плеер', async ({ page }) => {
     await page.goto('/music')
-    await expect(page.locator('.sc-embed iframe')).toHaveCount(0)
-    await page.getByRole('button', { name: 'Load the SoundCloud player' }).click()
-    await expect(page.locator('.sc-embed iframe')).toHaveAttribute('src', /w\.soundcloud\.com\/player/)
+    await expect(page.locator('.np')).toHaveCount(0)
+    const row = page.locator('.tl-row').nth(1)
+    await row.hover()
+    await expect(row.locator('.tl-act')).toBeVisible()
+    await row.locator('.tl-main').click()
+    await expect(page.locator('.np')).toBeVisible()
+    await expect(page.locator('.np-info b')).toHaveText('Халат')
+    await expect(row).toHaveClass(/playing/, { timeout: 8000 })
+    await expect
+      .poll(async () => page.locator('.np-t').first().textContent(), { timeout: 8000 })
+      .not.toBe('0:00')
+    await page.getByRole('button', { name: 'Pause' }).first().click()
+    await expect(row).not.toHaveClass(/playing/)
+    // скачивание: ссылка ведёт на mp3 с понятным именем
+    await expect(row.locator('a[download]')).toHaveAttribute('download', 'User1234 - Халат.mp3')
+    // музыка не пропадает при переходе на другую страницу
+    await page.getByRole('link', { name: 'About' }).first().click()
+    await expect(page.locator('.np')).toBeVisible()
+    await page.getByRole('button', { name: 'Close player' }).click()
+    await expect(page.locator('.np')).toHaveCount(0)
   })
 
   test('обо мне: можно скачать резюме на выбранном языке', async ({ page }) => {
@@ -316,5 +333,26 @@ test.describe('котик', () => {
     const box = (await page.locator('.pcat-btn img').boundingBox())!
     expect(box.x + box.width).toBeLessThanOrEqual(1001)
     expect(box.x).toBeGreaterThan(300)
+  })
+})
+
+test.describe('котик живёт сам', () => {
+  test('идёт сам, не выходя за экран, и реагирует на клик рядом', async ({ page }) => {
+    await page.addInitScript(() => {
+      localStorage.setItem('boot-v1', '1')
+      // ускоряем таймеры, чтобы не ждать десятки секунд
+      const st = window.setTimeout
+      window.setTimeout = ((fn: TimerHandler, ms?: number, ...a: unknown[]) =>
+        st(fn, ms && ms > 5000 && ms < 26000 ? 400 : ms, ...a)) as typeof window.setTimeout
+    })
+    await page.setViewportSize({ width: 1100, height: 760 })
+    await page.goto('/music')
+    await expect(page.locator('.pcat.free')).toBeVisible({ timeout: 6000 })
+    await page.waitForTimeout(1500)
+    const box = (await page.locator('.pcat-btn img').boundingBox())!
+    expect(box.x).toBeGreaterThanOrEqual(-2)
+    expect(box.y).toBeGreaterThanOrEqual(-2)
+    expect(box.x + box.width).toBeLessThanOrEqual(1102)
+    expect(box.y + box.height).toBeLessThanOrEqual(762)
   })
 })

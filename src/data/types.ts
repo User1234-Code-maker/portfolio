@@ -14,7 +14,7 @@ export interface ArchNode {
 
 export interface Project {
   slug: string
-  title: string
+  title: Bi
   category: Category
   ru: string
   en: string
@@ -51,6 +51,8 @@ export interface Track {
   title: string
   /** «м:сс»; если длина неизвестна, поле не заполняется */
   length?: string
+  /** путь к mp3 внутри public/ (например audio/album-1234/02-halat.mp3) */
+  src?: string
 }
 
 export interface ReleaseLink {

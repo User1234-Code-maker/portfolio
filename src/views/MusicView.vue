@@ -3,9 +3,12 @@ import { computed, ref } from 'vue'
 import PageHead from '../components/PageHead.vue'
 import PageShell from '../components/PageShell.vue'
 import ReleaseCover from '../components/ReleaseCover.vue'
-import ScEmbed from '../components/ScEmbed.vue'
+import UiIcon from '../components/UiIcon.vue'
+import TrackList from '../components/TrackList.vue'
+import { toggle, usePlayer } from '../composables/usePlayer'
 import { useLang } from '../composables/useLang'
-import { artistName, platforms, releases } from '../data/music'
+import { artistName, genreLabel, platforms, releases } from '../data/music'
+import { tx } from '../utils/i18n'
 import type { ReleaseKind } from '../data/types'
 import { vReveal } from '../directives/reveal'
 import { vTilt } from '../directives/tilt'
@@ -33,6 +36,12 @@ const date = (iso: string) =>
         month: 'long',
       })
 const sc = hrefFor('soundcloud')
+const player = usePlayer()
+const relPlaying = computed(() => player.release?.id === release.value.id && player.playing)
+const playRelease = () => {
+  const cur = player.release?.id === release.value.id ? player.index : -1
+  toggle(release.value, cur >= 0 ? cur : 0)
+}
 const pick = (id: string) => {
   selectedId.value = id
   document.getElementById('release-main')?.scrollIntoView({ behavior: 'smooth', block: 'start' })
@@ -52,8 +61,12 @@ const pick = (id: string) => {
           <span class="kind-tag">{{ t(`k_${release.kind}`) }}</span>
           <h2>{{ release.title }}</h2>
           <p class="mx-sub">{{ artistName }} · {{ date(release.date) }}</p>
-          <p class="mx-genres">{{ release.genres.join(' / ') }}</p>
+          <p class="mx-genres">{{ release.genres.map((g) => genreLabel(g, lang)).join(' / ') }}</p>
           <p v-if="release.blurb" class="mx-blurb">{{ release.blurb[lang] }}</p>
+          <button type="button" class="mx-play" @click="playRelease">
+            <UiIcon :name="relPlaying ? 'pause' : 'play'" />
+            {{ relPlaying ? t('np_pause') : release.tracks.length > 1 ? t('np_play_album') : t('np_play') }}
+          </button>
           <div v-if="release.links?.length" class="mx-links">
             <a
               v-for="l in release.links"
@@ -68,20 +81,7 @@ const pick = (id: string) => {
         </div>
       </div>
 
-      <ol class="tracks mx-tracks" :aria-label="t('m_tracklist')">
-        <li v-for="(tr, i) in release.tracks" :key="release.id + tr.title">
-          <span class="row">
-            <span class="n">{{ String(i + 1).padStart(2, '0') }}</span>
-            <span class="tt">{{ tr.title }}</span>
-            <span class="len">{{ tr.length }}</span>
-          </span>
-        </li>
-      </ol>
-    </section>
-
-    <section v-reveal class="wrap sec-tight" aria-labelledby="embed-t">
-      <h2 id="embed-t" class="h2">{{ t('m_embed_title') }}</h2>
-      <ScEmbed />
+      <TrackList :release="release" />
     </section>
 
     <section v-reveal class="wrap sec-tight" aria-labelledby="disco-t">
@@ -123,7 +123,7 @@ const pick = (id: string) => {
               <span class="kind-tag">{{ t(`k_${r.kind}`) }}</span>
               <h3>{{ r.title }}</h3>
               <p>{{ date(r.date) }}</p>
-              <p class="g">{{ r.genres.join(' / ') }}</p>
+              <p class="g">{{ r.genres.map((g) => genreLabel(g, lang)).join(' / ') }}</p>
             </div>
           </article>
         </div>
@@ -133,8 +133,8 @@ const pick = (id: string) => {
     <section v-reveal class="wrap sec-tight" aria-labelledby="plat-t">
       <h2 id="plat-t" class="h2">{{ t('m_listen_on') }}</h2>
       <div class="plat-row">
-        <a v-for="p in platforms" :key="p.name" class="plat" :href="p.url" target="_blank" rel="noopener"
-          >{{ p.name }} <span aria-hidden="true">↗</span></a
+        <a v-for="p in platforms" :key="p.name.en" class="plat" :href="p.url" target="_blank" rel="noopener"
+          >{{ tx(p.name, lang) }} <span aria-hidden="true">↗</span></a
         >
         <a class="plat" :href="sc" target="_blank" rel="noopener"
           >SoundCloud <span aria-hidden="true">↗</span></a

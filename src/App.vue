@@ -4,12 +4,14 @@ import { useRoute } from 'vue-router'
 import { useLang } from './composables/useLang'
 import { projectBySlug } from './data/projects'
 import PageVeil from './components/PageVeil.vue'
+import NowPlaying from './components/NowPlaying.vue'
 import PixelCat from './components/PixelCat.vue'
+import { tx } from './utils/i18n'
 import { pageReady } from './utils/pageScroll'
 
 const route = useRoute()
 const veilKey = ref(0)
-const { t } = useLang()
+const { lang, t } = useLang()
 
 // заголовок вкладки и описание зависят от страницы и языка
 watchEffect(() => {
@@ -21,7 +23,13 @@ watchEffect(() => {
     contact: 'nav_contact',
   }
   const project = name === 'project' ? projectBySlug(String(route.params.slug)) : undefined
-  const part = project ? project.title : navKey[name] ? t(navKey[name]) : name === 'not-found' ? '404' : ''
+  const part = project
+    ? tx(project.title, lang.value)
+    : navKey[name]
+      ? t(navKey[name])
+      : name === 'not-found'
+        ? '404'
+        : ''
   document.title = part ? `${part} — Bogdan Korzun` : t('meta_title')
   document.querySelector('meta[name="description"]')?.setAttribute('content', t('meta_desc'))
 })
@@ -37,5 +45,6 @@ const pageKey = () => route.path
     </Transition>
   </RouterView>
   <PageVeil :trigger="veilKey" />
+  <NowPlaying />
   <PixelCat />
 </template>

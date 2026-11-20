@@ -71,7 +71,7 @@ describe('App', () => {
   it('у примеров нет внешних ссылок, у настоящего проекта есть', async () => {
     const w = await open('/projects')
     const cards = w.findAll('.pcard')
-    const real = cards.find((c) => c.text().includes('Game Studio Website'))!
+    const real = cards.find((c) => c.text().includes('Game Studio'))!
     expect(real.findAll('a[href^="https://"]').length).toBe(2)
     for (const c of cards.filter((x) => x.find('.badge').exists())) {
       expect(c.findAll('a[href^="https://"]').length).toBe(0)
@@ -101,12 +101,13 @@ describe('App', () => {
     expect(w.find('[role="alert"]').exists()).toBe(true)
   })
 
-  it('музыка: показан альбом с треклистом, плеер SoundCloud включается по кнопке', async () => {
+  it('музыка: показан альбом с треклистом, у каждого трека есть файл и кнопка скачать', async () => {
     const w = await open('/music')
     expect(w.get('.mx-card h2').text()).toBe('1234')
-    expect(w.findAll('.mx-tracks li').length).toBe(10)
-    expect(w.find('.sc-embed iframe').exists()).toBe(false)
-    await w.get('.sc-facade button').trigger('click')
-    expect(w.get('.sc-embed iframe').attributes('src')).toContain('w.soundcloud.com/player')
+    expect(w.findAll('.tl-row').length).toBe(10)
+    expect(w.find('iframe').exists()).toBe(false)
+    const dl = w.findAll('.tl-act a[download]')
+    expect(dl.length).toBe(10)
+    expect(dl[1]!.attributes('href')).toContain('audio/album-1234/02-halat.mp3')
   })
 })

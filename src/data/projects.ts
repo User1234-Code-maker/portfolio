@@ -19,7 +19,7 @@ export const categories: Category[] = ['web', 'erp', 'bots']
 export const projects: Project[] = [
   {
     slug: 'game-studio-website',
-    title: 'Game Studio Website',
+    title: { ru: 'Сайт игровой студии', en: 'Game Studio Website' },
     category: 'web',
     ru: 'Сайт игровой студии: каталог, корзина и оплата через Stripe.',
     en: 'Game studio site: catalogue, cart and Stripe checkout.',
@@ -45,7 +45,7 @@ export const projects: Project[] = [
   },
   {
     slug: 'label-erp',
-    title: 'ERP для музыкального лейбла',
+    title: { ru: 'ERP для музыкального лейбла', en: 'ERP for a music label' },
     category: 'erp',
     ru: 'Внутренняя ERP-система: разделы Distribution и Support, таблицы с сохранением состояния.',
     en: 'In-house ERP system: Distribution and Support sections, tables that remember their state.',
@@ -71,7 +71,7 @@ export const projects: Project[] = [
   },
   {
     slug: 'telegram-bots',
-    title: 'Telegram-боты и mini app',
+    title: { ru: 'Telegram-боты и mini app', en: 'Telegram bots and mini app' },
     category: 'bots',
     ru: 'Сеть внутренних ботов и mini app, которые автоматизируют рабочие процессы компании.',
     en: 'A network of in-house bots and a mini app that automate the company’s working processes.',
@@ -94,7 +94,7 @@ export const projects: Project[] = [
   },
   {
     slug: 'portfolio-site',
-    title: 'Personal Portfolio',
+    title: { ru: 'Личный сайт-портфолио', en: 'Personal portfolio site' },
     category: 'web',
     ru: 'Этот сайт: многостраничное портфолио на двух языках с тестами и быстрой загрузкой.',
     en: 'This site: a multi-page bilingual portfolio with tests and fast loading.',

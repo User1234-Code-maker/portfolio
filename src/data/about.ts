@@ -64,7 +64,7 @@ export const jobs: Job[] = [
   },
   {
     period: { ru: 'Июнь 2025 — март 2026', en: 'Jun 2025 — Mar 2026' },
-    role: { ru: 'Business Development Manager (IT и ИИ)', en: 'Business Development Manager (IT & AI)' },
+    role: { ru: 'Менеджер по развитию бизнеса (IT и ИИ)', en: 'Business Development Manager (IT & AI)' },
     company: { ru: 'Quantum Agency', en: 'Quantum Agency' },
     text: {
       ru: 'Холодные B2B-продажи IT- и ИИ-решений, аутсорса и аутстаффа. Вёл сделки от первого контакта до договора, закрывал сделки до 15 млн ₽.',
@@ -73,7 +73,7 @@ export const jobs: Job[] = [
   },
   {
     period: { ru: 'Январь 2024 — июнь 2025', en: 'Jan 2024 — Jun 2025' },
-    role: { ru: 'IT Sales Manager', en: 'IT Sales Manager' },
+    role: { ru: 'Менеджер по продажам IT-решений', en: 'IT Sales Manager' },
     company: { ru: 'Nomadic Soft', en: 'Nomadic Soft' },
     text: {
       ru: 'Проектные продажи в web, mobile и AI: сбор требований, пресейл, коммерческие предложения вместе с разработкой. Закрывал проекты до 10 млн ₽.',

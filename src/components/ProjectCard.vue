@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { tx } from '../utils/i18n'
 import { computed } from 'vue'
 import { useLang } from '../composables/useLang'
 import { vTilt } from '../directives/tilt'
@@ -22,7 +23,7 @@ const p = computed(() => props.project)
         <LazyImg v-if="p.cover" :src="p.cover" :width="1160" :height="308" :eager="priority && index === 0" />
         <template v-else>
           <span class="ph-art" aria-hidden="true"><i></i><i></i><i></i></span>
-          <span class="ph-title" aria-hidden="true">{{ p.title }}</span>
+          <span class="ph-title" aria-hidden="true">{{ tx(p.title, lang) }}</span>
         </template>
         <span class="cat-tag">{{ t(`cat_${p.category}`) }}</span>
         <span v-if="p.sample" class="badge">{{ t('p_sample') }}</span>
@@ -31,7 +32,7 @@ const p = computed(() => props.project)
     </RouterLink>
     <div class="body">
       <h3>
-        <RouterLink :to="`/projects/${p.slug}`">{{ p.title }}</RouterLink>
+        <RouterLink :to="`/projects/${p.slug}`">{{ tx(p.title, lang) }}</RouterLink>
       </h3>
       <p>{{ p[lang] }}</p>
       <div class="chips">

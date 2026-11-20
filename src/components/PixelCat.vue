@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue'
+import { computed, nextTick, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 import { useRoute } from 'vue-router'
 import { useLang } from '../composables/useLang'
 import { reducedMotion } from '../utils/pageScroll'
@@ -21,6 +21,7 @@ const spots: Record<string, Spot> = {
   'not-found': { side: 'left', bottom: '0px', peek: false },
 }
 const spot = computed(() => spots[String(route.name)])
+const flip = computed(() => (free.value ? faceRight.value : spot.value?.side === 'left'))
 
 const el = ref<HTMLElement | null>(null)
 const hop = ref(false)
@@ -29,12 +30,16 @@ const out = ref(false)
 const free = ref(false) // котика уже перетащили: он живёт там, куда его положили
 const dragging = ref(false)
 const sleepy = ref(false)
+const walking = ref(false) // котик неспеша идёт сам
+const faceRight = ref(false)
 const below = ref(false) // у верхнего края пузырь рисуется под котиком
 let sayTimer = 0
 let screamTimer = 0
 let sleepTimer = 0
 let raf = 0
 let moveRaf = 0
+let wanderTimer = 0
+let lastReact = 0
 
 // Координаты хранятся обычными переменными и пишутся в style напрямую:
 // во время переноса Vue ничего не перерисовывает.
@@ -47,6 +52,7 @@ let grabY = 0
 let pressed = false
 let moved = false
 
+const curious = ['cat_curious_1', 'cat_curious_2', 'cat_curious_3']
 const lines = ['cat_line_1', 'cat_line_2', 'cat_line_3', 'cat_line_4']
 const screams = ['cat_scream_1', 'cat_scream_2', 'cat_scream_3']
 const landings = ['cat_land_1', 'cat_land_2', 'cat_land_3']
@@ -89,9 +95,100 @@ function clamp() {
   py = Math.min(Math.max(0, py), Math.max(0, window.innerHeight - box.offsetHeight))
 }
 
+// Свободная жизнь: котик иногда сам идёт на новое место, очень медленно (около 25 пикселей в секунду).
+// Движение делает CSS-transition на transform, то есть без перерисовки страницы.
+function toFree() {
+  if (free.value || !el.value) return
+  const r = el.value.querySelector('img')!.getBoundingClientRect()
+  px = r.left
+  py = r.top
+  free.value = true
+  out.value = false
+  place()
+}
+function stopWalk() {
+  const box = el.value
+  if (!box || !walking.value) return
+  const r = box.querySelector('img')!.getBoundingClientRect()
+  px = r.left
+  py = r.top
+  box.style.transition = 'none'
+  place()
+  walking.value = false
+}
+function walkTo(x: number, y: number) {
+  const box = el.value
+  if (!box || reducedMotion()) return
+  if (!free.value) {
+    // сначала котик переезжает на свободное позиционирование, потом идёт
+    toFree()
+    void nextTick().then(() => walkTo(x, y))
+    return
+  }
+  const prevX = px
+  const prevY = py
+  px = x
+  py = y
+  clamp()
+  const dist = Math.hypot(px - prevX, py - prevY)
+  if (dist < 20) return
+  faceRight.value = px > prevX
+  walking.value = true
+  box.style.transition = `transform ${Math.max(2.5, dist / 25)}s ease-in-out`
+  // кадр, чтобы transition увидел старую позицию
+  place()
+}
+function onWalkEnd(e: TransitionEvent) {
+  if (e.target !== el.value || e.propertyName !== 'transform') return
+  walking.value = false
+  if (el.value) el.value.style.transition = 'none'
+}
+function wander() {
+  window.clearTimeout(wanderTimer)
+  wanderTimer = window.setTimeout(
+    async () => {
+      if (!dragging.value && !sleepy.value && !walking.value && !document.hidden && el.value) {
+        toFree()
+        await nextTick()
+        const dx = (Math.random() - 0.5) * 520
+        const dy = (Math.random() - 0.5) * 160
+        walkTo(px + dx, Math.max(window.innerHeight * 0.4, py + dy))
+      }
+      wander()
+    },
+    11000 + Math.random() * 14000,
+  )
+}
+
+// Иногда реагирует на клики по странице: поворачивается, спрашивает «мяу?» или подходит поближе.
+function onPageDown(e: PointerEvent) {
+  const box = el.value
+  if (!box || dragging.value || box.contains(e.target as Node)) return
+  const now = performance.now()
+  if (now - lastReact < 6000 || Math.random() > 0.3) return
+  lastReact = now
+  rest()
+  const r = box.querySelector('img')!.getBoundingClientRect()
+  const toRight = e.clientX > r.left + r.width / 2
+  const roll = Math.random()
+  if (roll < 0.35) {
+    if (free.value) faceRight.value = toRight
+    jump()
+  } else if (roll < 0.7) {
+    if (free.value) faceRight.value = toRight
+    sayFor(pick(curious), 1700)
+  } else {
+    // подходит, но не вплотную
+    sayFor(pick(curious), 1500)
+    const gap = toRight ? -90 : 90
+    walkTo(e.clientX + gap - r.width / 2, e.clientY - r.height / 2)
+  }
+}
+
 function onDown(e: PointerEvent) {
   if (e.button !== 0 || !el.value) return
   const r = el.value.querySelector('img')!.getBoundingClientRect()
+  stopWalk()
   pressed = true
   moved = false
   startX = e.clientX
@@ -107,6 +204,8 @@ function startDrag() {
   if (!box) return
   const r = box.querySelector('img')!.getBoundingClientRect()
   free.value = true
+  walking.value = false
+  if (el.value) el.value.style.transition = 'none'
   dragging.value = true
   hop.value = false
   out.value = false
@@ -204,11 +303,15 @@ function onResize() {
 onMounted(() => {
   window.addEventListener('pointermove', onMove, { passive: true })
   window.addEventListener('resize', onResize, { passive: true })
+  window.addEventListener('pointerdown', onPageDown, { passive: true })
   rest()
+  wander()
 })
 onBeforeUnmount(() => {
   window.removeEventListener('pointermove', onMove)
   window.removeEventListener('resize', onResize)
+  window.removeEventListener('pointerdown', onPageDown)
+  window.clearTimeout(wanderTimer)
   cancelAnimationFrame(raf)
   cancelAnimationFrame(moveRaf)
   window.clearTimeout(sayTimer)
@@ -229,8 +332,12 @@ watch(
     v-if="spot"
     ref="el"
     class="pcat"
-    :class="[`s-${spot.side}`, { peek: spot.peek && !free, out, hop, free, dragging, sleepy, below }]"
-    :style="free ? undefined : { bottom: spot.bottom }"
+    :class="[
+      `s-${spot.side}`,
+      { peek: spot.peek && !free, out, hop, free, dragging, sleepy, below, walking, flip },
+    ]"
+    :style="{ bottom: free ? undefined : spot.bottom }"
+    @transitionend="onWalkEnd"
   >
     <span v-if="said" class="pcat-say" :class="{ scream: dragging }" role="status">{{ said }}</span>
     <span v-else-if="sleepy" class="pcat-say zz" aria-hidden="true">{{ t('cat_zzz') }}</span>
