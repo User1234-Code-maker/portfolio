@@ -33,7 +33,9 @@
     <link rel="apple-touch-icon" href="%BASE_URL%apple-touch-icon.png" />
     <style>
       html.no-boot #boot{display:none}
-      html.booting{overflow:hidden}
+      /* страницу под заставкой не запираем через overflow:hidden: на iPhone в Telegram/Chrome после снятия
+         этого запрета прокрутка начинала «пружинить» и отскакивать наверх. Заставка просто глотает касания. */
+      #boot{touch-action:none;overscroll-behavior:contain}
       #boot{position:fixed;inset:0;z-index:1000;overflow:hidden;background:linear-gradient(180deg,#D7E4FC,#E6E1F8);
         clip-path:inset(0 0 0 0);transition:clip-path .85s cubic-bezier(.7,0,.2,1);cursor:pointer}
       #boot.out{clip-path:inset(0 0 100% 0);pointer-events:none}
