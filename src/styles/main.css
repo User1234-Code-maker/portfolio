@@ -355,3 +355,6 @@ html.cat-adopted .cat{visibility:hidden}
 /* внизу Hero дорисован силуэт города цвета страницы: край не пустой, а как будто сам сайт «вырастает» из города */
 .hero::before{content:"";position:absolute;left:0;right:0;bottom:-1px;height:clamp(64px,9vh,104px);z-index:10;pointer-events:none;opacity:var(--hf,0);
  background:url(../assets/img/skyline.svg) right bottom/max(100%,980px) 100% no-repeat}
+
+/* на телефонах маска на огромной картинке персонажа даёт рывки при прокрутке — там хватает градиента поверх */
+@media (max-width:700px){.l-char img.main{-webkit-mask-image:none;mask-image:none}}

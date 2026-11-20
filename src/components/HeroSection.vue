@@ -19,6 +19,7 @@ const setFade = () => {
   root.value?.style.setProperty('--hf', k.toFixed(3))
 }
 const onScroll = () => {
+  if (matchMedia('(max-width:700px)').matches) return // на телефоне значение постоянное, на скролл не реагируем
   if (!ticking) {
     ticking = true
     requestAnimationFrame(setFade)
