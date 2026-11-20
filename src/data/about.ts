@@ -1,7 +1,5 @@
 import type { Job, Milestone, Service, SkillGroup } from './types'
 
-export const stackIcons = ['TypeScript', 'React', 'Vue', 'Node.js', 'PostgreSQL', 'Prisma', 'Redis', 'Git']
-
 export const skills: SkillGroup[] = [
   {
     name: { ru: 'Фронтенд', en: 'Frontend' },

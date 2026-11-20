@@ -120,5 +120,3 @@ export const projects: Project[] = [
 ]
 
 export const projectBySlug = (slug: string) => projects.find((p) => p.slug === slug)
-
-export const categoryOf = (c: Category) => `cat_${c}`

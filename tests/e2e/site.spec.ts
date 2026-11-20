@@ -273,3 +273,48 @@ test.describe('фон и язык', () => {
     await expect(page.locator('html')).toHaveAttribute('lang', 'ru')
   })
 })
+
+test.describe('котик', () => {
+  test.beforeEach(async ({ page }) => {
+    await page.addInitScript(() => localStorage.setItem('boot-v1', '1'))
+  })
+
+  test('его можно перетащить, пока несут, он кричит, потом остаётся на месте', async ({ page }) => {
+    await page.setViewportSize({ width: 1280, height: 800 })
+    await page.goto('/music')
+    const cat = page.locator('.pcat-btn')
+    await expect(cat).toBeVisible()
+    const before = (await page.locator('.pcat-btn img').boundingBox())!
+    await page.mouse.move(before.x + 20, before.y + 20)
+    await page.mouse.down()
+    await page.mouse.move(before.x + 120, before.y + 80, { steps: 6 })
+    await page.mouse.move(before.x + 420, before.y - 60, { steps: 6 })
+    await expect(page.locator('.pcat.dragging')).toBeVisible()
+    await expect(page.locator('.pcat-say.scream')).toContainText(/a{2,}|eek|ай|ааа/i)
+    await page.mouse.up()
+    await expect(page.locator('.pcat.dragging')).toHaveCount(0)
+    await expect(page.locator('.pcat.free')).toBeVisible()
+    const after = (await page.locator('.pcat-btn img').boundingBox())!
+    expect(Math.abs(after.x - (before.x + 400))).toBeLessThan(8)
+    // остаётся на месте и после перехода на другую страницу
+    await page.getByRole('link', { name: 'About' }).first().click()
+    await expect(page.locator('.pcat.free')).toBeVisible()
+  })
+
+  test('обычный клик по котику не переносит его, а мяукает', async ({ page }) => {
+    await page.goto('/music')
+    await page.locator('.pcat-btn').click()
+    await expect(page.locator('.pcat-say')).toBeVisible()
+    await expect(page.locator('.pcat.free')).toHaveCount(0)
+  })
+
+  test('стрелки двигают котика, он не уходит за экран', async ({ page }) => {
+    await page.setViewportSize({ width: 1000, height: 700 })
+    await page.goto('/music')
+    await page.locator('.pcat-btn').focus()
+    for (let i = 0; i < 60; i++) await page.keyboard.press('ArrowRight')
+    const box = (await page.locator('.pcat-btn img').boundingBox())!
+    expect(box.x + box.width).toBeLessThanOrEqual(1001)
+    expect(box.x).toBeGreaterThan(300)
+  })
+})
