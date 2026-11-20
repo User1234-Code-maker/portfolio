@@ -8,7 +8,6 @@ defineProps<{ title: string; lead?: string; jp?: string }>()
 <template>
   <header v-reveal class="wrap page-head">
     <span v-if="jp" class="ph-jp" aria-hidden="true">{{ jp }}</span>
-    <span v-if="jp" class="ph-mark" aria-hidden="true">{{ jp }}</span>
     <h1>{{ title }}</h1>
     <p v-if="lead" class="lead">{{ lead }}</p>
     <slot />

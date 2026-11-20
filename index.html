@@ -80,13 +80,6 @@
           var seen = localStorage.getItem('boot-v1')
           var forced = /[?&]intro\b/.test(location.search)
           var calm = matchMedia('(prefers-reduced-motion: reduce)').matches
-          // контент Hero появляется по очереди (класс hero-in ставит boot.ts); аварийно снимаем через 5 с
-          if (!calm && (location.pathname === '%BASE_URL%' || location.pathname + '/' === '%BASE_URL%')) {
-            r.classList.add('hero-pre')
-            setTimeout(function () {
-              r.classList.remove('hero-pre')
-            }, 5000)
-          }
           if ((seen && !forced) || calm) r.classList.add('no-boot')
           else r.classList.add('booting')
         } catch (e) {

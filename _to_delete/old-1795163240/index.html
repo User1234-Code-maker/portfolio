@@ -1,0 +1,118 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <template id="home-preloads">
+    <link
+      rel="preload"
+      as="image"
+      type="image/webp"
+      href="/src/assets/img/character-sm.webp"
+      media="(max-width: 700px)"
+    />
+    <link
+      rel="preload"
+      as="image"
+      type="image/webp"
+      href="/src/assets/img/character.webp"
+      media="(min-width: 701px)"
+    />
+    </template>
+    <link rel="preload" as="font" type="font/woff2" crossorigin href="/src/assets/fonts/manrope-latin-500-normal.woff2" />
+    <link rel="preload" as="font" type="font/woff2" crossorigin href="/src/assets/fonts/manrope-latin-800-normal.woff2" />
+    <title>Bogdan Korzun — Fullstack Developer &amp; Musician</title>
+    <meta
+      name="description"
+      content="Portfolio of Bogdan Korzun: fullstack developer, systems analyst and musician. Projects, music and contacts."
+    />
+    <meta name="theme-color" content="#CFE0FB" />
+    <link rel="icon" type="image/svg+xml" href="%BASE_URL%favicon.svg" />
+    <link rel="icon" type="image/png" sizes="32x32" href="%BASE_URL%favicon-32.png" />
+    <link rel="alternate icon" href="%BASE_URL%favicon.ico" sizes="any" />
+    <link rel="apple-touch-icon" href="%BASE_URL%apple-touch-icon.png" />
+    <style>
+      html.no-boot #boot{display:none}
+      html.booting{overflow:hidden}
+      #boot{position:fixed;inset:0;z-index:1000;overflow:hidden;background:linear-gradient(180deg,#D7E4FC,#E6E1F8);
+        clip-path:inset(0 0 0 0);transition:clip-path .85s cubic-bezier(.7,0,.2,1);cursor:pointer}
+      #boot.out{clip-path:inset(0 0 100% 0);pointer-events:none}
+      #boot.out .b-center{opacity:0;transform:translateY(-24px) scale(.96);transition:opacity .35s,transform .5s}
+      #boot svg,#boot i{position:absolute;display:block}
+      .b-grid{inset:0;width:100%;height:100%}
+      .b-grid line{stroke:rgba(78,106,200,.22);stroke-width:1;vector-effect:non-scaling-stroke;stroke-dasharray:1;stroke-dashoffset:1;
+        animation:bdraw .9s ease-out var(--d) forwards}
+      .b-city{left:0;bottom:0;width:100%;height:46%}
+      .b-city path{stroke:rgba(78,106,200,.45);stroke-width:1.5;vector-effect:non-scaling-stroke;stroke-dasharray:1;stroke-dashoffset:1;
+        fill:rgba(120,140,225,0);animation:bdraw 1.2s ease-out .35s forwards,bfill .6s ease 1.1s forwards}
+      .b-cloud{width:46vw;height:16vw;max-width:620px;max-height:200px;border-radius:50%;filter:blur(26px);opacity:0;
+        background:radial-gradient(closest-side,rgba(255,255,255,.95),rgba(255,255,255,0));animation:bfade 1s ease .5s forwards}
+      .c1{left:-6vw;top:12%}.c2{right:-8vw;top:34%;animation-delay:.75s}
+      .b-star{width:22px;height:22px;fill:#fff;filter:drop-shadow(0 0 8px rgba(124,92,255,.9));opacity:0;scale:.2;animation:bstar .6s ease 1.05s forwards}
+      .s1{left:22%;top:26%}.s2{right:24%;top:62%;width:16px;height:16px;animation-delay:1.25s}
+      .b-center{position:absolute;left:50%;top:46%;translate:-50% -50%;display:flex;flex-direction:column;align-items:center;gap:18px}
+      .b-cap{position:relative!important;width:clamp(96px,16vw,140px);height:auto;overflow:visible}
+      .b-cap .cl path{stroke-dasharray:1;stroke-dashoffset:1;animation:bdraw .95s cubic-bezier(.5,0,.2,1) .2s forwards}
+      .b-cap .cf{opacity:0;animation:bfade .45s ease .95s forwards}
+      .b-word{font:800 clamp(34px,6vw,52px)/1 Manrope,system-ui,sans-serif;letter-spacing:-.03em;color:#1E2A6B;clip-path:inset(0 100% 0 0);
+        animation:bwipe .5s cubic-bezier(.6,0,.2,1) 1s forwards}
+      .b-bar{position:relative!important;width:120px;height:3px;border-radius:3px;background:rgba(30,42,107,.14);overflow:hidden}
+      .b-bar i{inset:0;background:#6B5BD6;transform-origin:left;transform:scaleX(0);animation:bbar 1.4s cubic-bezier(.4,0,.2,1) .1s forwards}
+      @keyframes bdraw{to{stroke-dashoffset:0}}
+      @keyframes bfill{to{fill:rgba(120,140,225,.16)}}
+      @keyframes bfade{to{opacity:1}}
+      @keyframes bstar{to{opacity:1;scale:1}}
+      @keyframes bwipe{to{clip-path:inset(0 0 0 0)}}
+      @keyframes bbar{to{transform:scaleX(1)}}
+    </style>
+    <noscript><style>#boot{display:none}</style></noscript>
+    <script>
+      // заставка только при первом визите (или по ссылке ?intro); без анимации при reduced-motion
+      (function () {
+        var r = document.documentElement
+        window.__bootT = performance.now()
+        // предзагрузка картинок Hero только на главной
+        if (location.pathname === '%BASE_URL%' || location.pathname + '/' === '%BASE_URL%') {
+          var t = document.getElementById('home-preloads')
+          if (t) document.head.appendChild(t.content.cloneNode(true))
+        }
+        try {
+          var seen = localStorage.getItem('boot-v1')
+          var forced = /[?&]intro\b/.test(location.search)
+          var calm = matchMedia('(prefers-reduced-motion: reduce)').matches
+          if ((seen && !forced) || calm) r.classList.add('no-boot')
+          else r.classList.add('booting')
+        } catch (e) {
+          r.classList.add('no-boot')
+        }
+      })()
+    </script>
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Bogdan Korzun — Fullstack Developer & Musician" />
+    <meta
+      property="og:description"
+      content="Build cool shit. Make good music. Projects, music and contacts."
+    />
+    <meta property="og:image" content="%BASE_URL%og.jpg" />
+    <meta name="twitter:card" content="summary_large_image" />
+  </head>
+  <body>
+    <div id="boot" aria-hidden="true">
+      <svg class="b-grid" viewBox="0 0 1000 600" preserveAspectRatio="none" fill="none"><line x1="0" y1="0" x2="0" y2="600" pathLength="1" style="--d:0ms"/><line x1="100" y1="0" x2="100" y2="600" pathLength="1" style="--d:45ms"/><line x1="200" y1="0" x2="200" y2="600" pathLength="1" style="--d:90ms"/><line x1="300" y1="0" x2="300" y2="600" pathLength="1" style="--d:135ms"/><line x1="400" y1="0" x2="400" y2="600" pathLength="1" style="--d:180ms"/><line x1="500" y1="0" x2="500" y2="600" pathLength="1" style="--d:225ms"/><line x1="600" y1="0" x2="600" y2="600" pathLength="1" style="--d:270ms"/><line x1="700" y1="0" x2="700" y2="600" pathLength="1" style="--d:315ms"/><line x1="800" y1="0" x2="800" y2="600" pathLength="1" style="--d:360ms"/><line x1="900" y1="0" x2="900" y2="600" pathLength="1" style="--d:405ms"/><line x1="1000" y1="0" x2="1000" y2="600" pathLength="1" style="--d:450ms"/><line x1="0" y1="0" x2="1000" y2="0" pathLength="1" style="--d:120ms"/><line x1="0" y1="100" x2="1000" y2="100" pathLength="1" style="--d:180ms"/><line x1="0" y1="200" x2="1000" y2="200" pathLength="1" style="--d:240ms"/><line x1="0" y1="300" x2="1000" y2="300" pathLength="1" style="--d:300ms"/><line x1="0" y1="400" x2="1000" y2="400" pathLength="1" style="--d:360ms"/><line x1="0" y1="500" x2="1000" y2="500" pathLength="1" style="--d:420ms"/><line x1="0" y1="600" x2="1000" y2="600" pathLength="1" style="--d:480ms"/></svg>
+      <i class="b-cloud c1"></i><i class="b-cloud c2"></i>
+      <svg class="b-city" viewBox="0 0 1000 600" preserveAspectRatio="xMidYMax slice" fill="none"><path pathLength="1" d="M0 600V470h40V420h50V380h36V430h44V350h54V300h30V360h40V440h60V400h44V330h48V280h36V340h40V450h70V410h50V360h44V310h40V370h46V460h60V420h44V390h50V340h38V300h30V350h44V430h56V470h60V440h46V400h40V360h50V420h50V480h60V600"/></svg>
+      <svg class="b-star s1" viewBox="0 0 24 24"><path d="M12 0l2.6 9.4L24 12l-9.4 2.6L12 24l-2.6-9.4L0 12l9.4-2.6Z"/></svg>
+      <svg class="b-star s2" viewBox="0 0 24 24"><path d="M12 0l2.6 9.4L24 12l-9.4 2.6L12 24l-2.6-9.4L0 12l9.4-2.6Z"/></svg>
+      <div class="b-center">
+        <svg class="b-cap" viewBox="0 0 64 64" fill="none">
+          <g class="cl" stroke="#14205C" stroke-width="2.4" stroke-linejoin="round" stroke-linecap="round"><path pathLength="1" d="M7 30 6 6 27 15Z"/><path pathLength="1" d="M57 30 58 6 37 15Z"/><path pathLength="1" d="M6 48C5 29 14 14 32 14S59 29 58 48C58 54 54 57 48 57H16C10 57 6 54 6 48Z"/><path pathLength="1" d="M10.5 49C10.5 38 16 31 23 30C28 29.2 31 31.4 35 30.2C43 28.4 53.5 36 53.5 49C53.5 51.2 52 52.5 50 52.5H14C12 52.5 10.5 51.2 10.5 49Z"/></g>
+          <g class="cf"> <path d="M7 30 6 6 27 15Z" fill="#2B72E0" stroke="#14205C" stroke-width="3" stroke-linejoin="round"/> <path d="M57 30 58 6 37 15Z" fill="#2B72E0" stroke="#14205C" stroke-width="3" stroke-linejoin="round"/> <path d="M11 22 10.5 12 20 16.5Z" fill="#6DB8FF"/> <path d="M53 22 53.5 12 44 16.5Z" fill="#6DB8FF"/> <path d="M6 48C5 29 14 14 32 14S59 29 58 48C58 54 54 57 48 57H16C10 57 6 54 6 48Z" fill="#2F7DEA" stroke="#14205C" stroke-width="3" stroke-linejoin="round"/> <path d="M15 24c3-3 6-4.5 9-5M44 21c2 1 4 2.5 5 4.5" stroke="#6DB8FF" stroke-width="2.4" stroke-linecap="round"/> <path d="M10 38v5M54 36v6M13 49l2 2M51 49l-2 2" stroke="#1B54B8" stroke-width="2.4" stroke-linecap="round"/> <path d="M10.5 49C10.5 38 16 31 23 30C28 29.2 31 31.4 35 30.2C43 28.4 53.5 36 53.5 49C53.5 51.2 52 52.5 50 52.5H14C12 52.5 10.5 51.2 10.5 49Z" fill="#F4BF94" stroke="#14205C" stroke-width="2.4" stroke-linejoin="round"/> <path d="M17 41c3-5 8-8 13-8" stroke="#FFDDBB" stroke-width="2.4" stroke-linecap="round"/> <path d="M38 36.5l6 .6M24 46l5-.4" stroke="#C98E66" stroke-width="1.8" stroke-linecap="round"/> <path d="M13 51.8h38" stroke="#FFEBD6" stroke-width="3.2" stroke-linecap="round"/> </g>
+        </svg>
+        <span class="b-word">1234</span>
+        <span class="b-bar"><i></i></span>
+      </div>
+    </div>
+    <div id="app"></div>
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>
