@@ -2661,3 +2661,26 @@ nav > a[aria-current]::after {
 .rest .foot-soc {
   display: none;
 }
+
+/* меню на телефоне: без подчёркивания у пунктов, иконки ровной сеткой */
+.mobile-menu a::after {
+  display: none;
+}
+@media (max-width: 600px) {
+  .menu-contact .soc {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    justify-items: center;
+    gap: 6px;
+  }
+  .menu-contact .soc.round a {
+    width: 40px;
+    height: 40px;
+    padding: 0;
+  }
+  .menu-contact .soc.round svg {
+    width: 19px;
+    height: 19px;
+    flex: none;
+  }
+}

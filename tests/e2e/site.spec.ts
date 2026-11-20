@@ -172,6 +172,7 @@ test.describe('функциональность', () => {
 
   test('контакты: только настоящие ссылки из данных', async ({ page }) => {
     await page.goto('/contact')
+    await page.locator('.chan').first().waitFor()
     const hrefs = await page
       .locator('.chan')
       .evaluateAll((els) => els.map((e) => (e as HTMLAnchorElement).href))

@@ -7,8 +7,8 @@
 
 :root{--ink:#1E2A6B;--soft:#434A80;--violet:#6B5BD6;--glass:rgba(255,255,255,.55)}
 *{box-sizing:border-box;margin:0}
-html,body{height:100%}
-body{font-family:Mn,system-ui,sans-serif;color:var(--ink);overflow-x:hidden;-webkit-font-smoothing:antialiased;background:#DCE4FB}
+html,body{min-height:100%}
+body{font-family:Mn,system-ui,sans-serif;color:var(--ink);overflow-x:hidden;overflow-x:clip;-webkit-font-smoothing:antialiased;background:#DCE4FB}
 a{color:inherit;text-decoration:none}
 
 /* ─────────── сцена: слои ─────────── */
@@ -356,3 +356,11 @@ html.cat-adopted .cat{visibility:hidden}
 .hero::before{content:"";position:absolute;left:0;right:0;bottom:-1px;height:clamp(64px,9vh,104px);height:clamp(64px,9svh,104px);z-index:10;pointer-events:none;opacity:var(--hf,0);
  background:url(../assets/img/skyline.svg) right bottom/max(100%,980px) 100% no-repeat}
 
+
+/* телефоны и планшеты: слои Hero без тяжёлых эффектов — в Chrome и Telegram они давали рывки при прокрутке */
+@media (hover:none),(max-width:700px){
+ .l-city,.l-char{will-change:auto}
+ .l-cloudback img{mix-blend-mode:normal}
+ .l-far{filter:none}
+ .hero{contain:paint}
+}
