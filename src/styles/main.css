@@ -12,7 +12,7 @@ body{font-family:Mn,system-ui,sans-serif;color:var(--ink);overflow-x:hidden;over
 a{color:inherit;text-decoration:none}
 
 /* ─────────── сцена: слои ─────────── */
-.hero{position:relative;min-height:100vh;min-height:100svh;overflow:clip;isolation:isolate}
+.hero{position:relative;min-height:100vh;min-height:calc(100*var(--sh,1svh));overflow:clip;isolation:isolate}
 .layer{position:absolute;inset:0;pointer-events:none}
 
 .l-sky{background:linear-gradient(170deg,#CFE0FB 0%,#C6D4FA 38%,#D3CDF6 72%,#E3D8F6 100%);z-index:0}
@@ -90,7 +90,7 @@ a{color:inherit;text-decoration:none}
 
 /* ─────────── интерфейс ─────────── */
 .wrap{position:relative;z-index:10;width:min(1440px,100%);margin:0 auto;padding:0 44px;
- min-height:100vh;min-height:100svh;display:flex;flex-direction:column}
+ min-height:100vh;min-height:calc(100*var(--sh,1svh));display:flex;flex-direction:column}
 .hero header,.page-top header{display:flex;align-items:center;padding:30px 0 0}
 .brand{display:flex;align-items:center;gap:11px;font-weight:800;font-size:22px;letter-spacing:-.02em}
 .sp{color:var(--violet)}
@@ -131,8 +131,8 @@ h1 em{font-style:normal;color:var(--violet)}
 @media (max-width:1100px){
  .wrap{padding:0 26px}
  nav{display:none}
- .l-char{padding-right:0;justify-content:center;align-items:flex-start;padding-top:7vh;padding-top:7svh}
- .l-char img.main{height:46vh;height:46svh;margin-bottom:0;
+ .l-char{padding-right:0;justify-content:center;align-items:flex-start;padding-top:7vh;padding-top:calc(7*var(--sh,1svh))}
+ .l-char img.main{height:46vh;height:calc(46*var(--sh,1svh));margin-bottom:0;
   -webkit-mask-image:linear-gradient(to bottom,#000 72%,rgba(0,0,0,.82) 86%,transparent 99%),
                      linear-gradient(to right,transparent 0,rgba(0,0,0,.85) 5%,#000 12%,#000 88%,rgba(0,0,0,.85) 95%,transparent 100%);
   -webkit-mask-composite:source-in;
@@ -141,14 +141,14 @@ h1 em{font-style:normal;color:var(--violet)}
   mask-composite:intersect}
  .l-wash{background:linear-gradient(to bottom,rgba(240,243,255,.2) 0%,rgba(238,241,255,.06) 26%,rgba(238,241,255,.55) 46%,rgba(240,243,255,.9) 60%,rgba(241,244,255,.97) 76%)}
  .l-cloudfront{-webkit-mask-image:linear-gradient(to bottom,transparent 44%,#000 62%,#000 76%,transparent 92%);mask-image:linear-gradient(to bottom,transparent 44%,#000 62%,#000 76%,transparent 92%);opacity:.34}
- .l-cloudfront img{left:-40%;bottom:auto;top:30vh;top:30svh;width:190%}
+ .l-cloudfront img{left:-40%;bottom:auto;top:30vh;top:calc(30*var(--sh,1svh));width:190%}
  .l-cloudmid img{left:-20%;top:4%;width:140%}
  .l-cloudback img{left:-10%;top:0;width:130%}
- main{max-width:none;justify-content:flex-end;padding-bottom:36px;margin-top:50vh;margin-top:50svh}
- .jp{right:2.6vw;top:calc(9vh + 16px);top:calc(9svh + 16px);font-size:20px;padding:24px 7px;border-width:2.5px;border-radius:20px}
+ main{max-width:none;justify-content:flex-end;padding-bottom:36px;margin-top:50vh;margin-top:calc(50*var(--sh,1svh))}
+ .jp{right:2.6vw;top:calc(9vh + 16px);top:calc(calc(9*var(--sh,1svh)) + 16px);font-size:20px;padding:24px 7px;border-width:2.5px;border-radius:20px}
  .jp i.a{width:15px;height:15px}
  .jp i.b{width:12px;height:12px}
- .cat{right:5vw;top:max(calc(38vh + 16px),calc(9vh + 248px));top:max(calc(38svh + 16px),calc(9svh + 248px));width:56px}
+ .cat{right:5vw;top:max(calc(38vh + 16px),calc(9vh + 248px));top:max(calc(calc(38*var(--sh,1svh)) + 16px),calc(calc(9*var(--sh,1svh)) + 248px));width:56px}
  .sp1{left:9%;top:11%;width:48px}
  .sp2{right:13%;top:16%;width:36px}
  .sp3{left:12%;bottom:auto;top:52%;width:28px}
@@ -158,21 +158,21 @@ h1 em{font-style:normal;color:var(--violet)}
 @media (max-width:600px){
  .wrap{padding:0 20px}
  header .right .soc{display:none}
- .l-char img.main{height:50vh;height:50svh;
+ .l-char img.main{height:50vh;height:calc(50*var(--sh,1svh));
   -webkit-mask-image:linear-gradient(to bottom,#000 0,#000 78%,rgba(0,0,0,.6) 90%,transparent 100%),
                      linear-gradient(to right,transparent 0,rgba(0,0,0,.85) 5%,#000 12%,#000 88%,rgba(0,0,0,.85) 95%,transparent 100%);
   mask-image:linear-gradient(to bottom,#000 0,#000 78%,rgba(0,0,0,.6) 90%,transparent 100%),
              linear-gradient(to right,transparent 0,rgba(0,0,0,.85) 5%,#000 12%,#000 88%,rgba(0,0,0,.85) 95%,transparent 100%)}
- .l-char{padding-top:8vh;padding-top:8svh;padding-right:0}
- main{margin-top:40vh;margin-top:40svh;padding-bottom:20px}
+ .l-char{padding-top:8vh;padding-top:calc(8*var(--sh,1svh));padding-right:0}
+ main{margin-top:40vh;margin-top:calc(40*var(--sh,1svh));padding-bottom:20px}
  .tag{font-size:17px;margin-top:16px}
  .rule{margin:18px 0 20px}
  h1{font-size:34px}
  .stack{gap:16px;margin-bottom:22px}
  .stack img{height:28px}
  .acts{gap:16px}
- .cat{right:5vw;top:max(calc(35vh + 12px),calc(9vh + 206px));top:max(calc(35svh + 12px),calc(9svh + 206px));width:46px}
- .jp{font-size:17px;top:calc(9vh + 12px);top:calc(9svh + 12px);right:3.4vw;padding:20px 6px;border-width:2px;border-radius:17px;letter-spacing:.26em}
+ .cat{right:5vw;top:max(calc(35vh + 12px),calc(9vh + 206px));top:max(calc(calc(35*var(--sh,1svh)) + 12px),calc(calc(9*var(--sh,1svh)) + 206px));width:46px}
+ .jp{font-size:17px;top:calc(9vh + 12px);top:calc(calc(9*var(--sh,1svh)) + 12px);right:3.4vw;padding:20px 6px;border-width:2px;border-radius:17px;letter-spacing:.26em}
  .jp i.a{width:12px;height:12px;top:6px;left:5px}
  .jp i.b{width:10px;height:10px;bottom:6px;right:5px}
  .eyebrow{font-size:17px;margin-bottom:12px}
@@ -335,25 +335,27 @@ h1 em{font-style:normal;color:var(--violet)}
 
 /* мягкие световые пятна на фоне нижней части */
 .orb{position:absolute;border-radius:50%;filter:blur(64px);opacity:.55;pointer-events:none;z-index:0;animation:float 22s ease-in-out infinite alternate}
-.o1{width:420px;height:420px;left:-140px;top:5%;background:#C5D3FF}
-.o2{width:480px;height:480px;right:-160px;top:36%;background:#E7D0F8;animation-delay:-8s}
-.o3{width:380px;height:380px;left:18%;top:70%;background:#BDE0FF;animation-delay:-14s}
+.o1{width:420px;height:420px;left:-140px;top:170px;background:#C5D3FF}
+.o2{width:480px;height:480px;right:-160px;top:1200px;background:#E7D0F8;animation-delay:-8s}
+.o3{width:380px;height:380px;left:18%;top:2400px;background:#BDE0FF;animation-delay:-14s}
 @keyframes float{from{translate:0 0}to{translate:40px -50px}}
 @media (max-width:600px){.orb{opacity:.4;filter:blur(48px)}}
+/* на телефонах пятна стоят на месте: плавающее размытое пятно перерисовывается каждый кадр и тормозит скролл */
+@media (hover:none){.orb{animation:none}.w-cloud{translate:none}}
 @media (max-width:700px){.l-city{background-image:url(../assets/img/city-sm.webp)}.l-far{background-image:url(../assets/img/city-sm.webp)}}
 
 /* на главной вместо картинки в Hero живёт тот же котик, что и на остальных страницах */
 html.cat-adopted .cat{visibility:hidden}
 
 /* низ Hero плавно растворяется в цвет страницы, без резкого среза при скролле */
-.hero::after{content:"";position:absolute;left:0;right:0;bottom:-2px;height:30vh;height:30svh;z-index:9;pointer-events:none;opacity:var(--hf,0);
+.hero::after{content:"";position:absolute;left:0;right:0;bottom:-2px;height:30vh;height:calc(30*var(--sh,1svh));z-index:9;pointer-events:none;opacity:var(--hf,0);
  background:linear-gradient(to bottom,rgba(231,234,253,0) 0%,rgba(231,234,253,.22) 30%,rgba(231,234,253,.62) 62%,rgba(231,234,253,.92) 86%,#E7EAFD 100%)}
 
 /* нижний край персонажа растворяется: при прокрутке слой уезжает вверх и больше не виден его срез */
 @media (min-width:1101px){.l-char img.main{--m:linear-gradient(to bottom,#000 0,#000 calc(100% - 22%*var(--hf,0)),rgba(0,0,0,calc(1 - var(--hf,0))) 100%);-webkit-mask-image:var(--m);mask-image:var(--m)}}
 
 /* внизу Hero дорисован силуэт города цвета страницы: край не пустой, а как будто сам сайт «вырастает» из города */
-.hero::before{content:"";position:absolute;left:0;right:0;bottom:-1px;height:clamp(64px,9vh,104px);height:clamp(64px,9svh,104px);z-index:10;pointer-events:none;opacity:var(--hf,0);
+.hero::before{content:"";position:absolute;left:0;right:0;bottom:-1px;height:clamp(64px,9vh,104px);height:clamp(64px,calc(9*var(--sh,1svh)),104px);z-index:10;pointer-events:none;opacity:var(--hf,0);
  background:url(../assets/img/skyline.svg) right bottom/max(100%,980px) 100% no-repeat}
 
 

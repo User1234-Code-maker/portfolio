@@ -19,7 +19,9 @@ const onScroll = () => {
   })
 }
 onMounted(() => {
-  if (!reducedMotion()) window.addEventListener('scroll', onScroll, { passive: true })
+  // на сенсорных экранах облака не двигаем: лишняя работа на каждом кадре скролла
+  if (!reducedMotion() && !matchMedia('(hover: none)').matches)
+    window.addEventListener('scroll', onScroll, { passive: true })
 })
 onBeforeUnmount(() => {
   window.removeEventListener('scroll', onScroll)

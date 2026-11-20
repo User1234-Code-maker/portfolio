@@ -240,7 +240,7 @@ nav > a[aria-current]::after {
 }
 .wc2 {
   top: min(640px, 70vh);
-  top: min(640px, 70svh);
+  top: min(640px, calc(70*var(--sh,1svh)));
   left: -160px;
   width: min(460px, 56vw);
   opacity: 0.38;
@@ -281,7 +281,7 @@ nav > a[aria-current]::after {
 .page {
   position: relative;
   min-height: 100vh;
-  min-height: 100svh;
+  min-height: calc(100*var(--sh,1svh));
   display: flex;
   flex-direction: column;
   overflow: hidden;
