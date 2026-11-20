@@ -1,4 +1,4 @@
-import { nextTick, ref, watchEffect } from 'vue'
+import { ref, watchEffect } from 'vue'
 import { site, type Lang } from '../data/site'
 
 const STORAGE_KEY = 'lang'
@@ -27,20 +27,8 @@ watchEffect(() => {
 
 export function useLang() {
   const t = (key: string): string => site.t[lang.value][key] ?? key
-  // Смена языка: короткое мягкое затухание контента, текст меняется, пока он невидим.
-  // Только opacity, без снимков экрана и blur, поэтому ничего не тормозит.
   const setLang = (l: Lang) => {
-    if (l === lang.value) return
-    if (matchMedia('(prefers-reduced-motion: reduce)').matches) {
-      lang.value = l
-      return
-    }
-    const root = document.documentElement
-    root.classList.add('lang-swap')
-    window.setTimeout(() => {
-      lang.value = l
-      nextTick().then(() => requestAnimationFrame(() => root.classList.remove('lang-swap')))
-    }, 140)
+    lang.value = l
   }
   return { lang, t, setLang }
 }

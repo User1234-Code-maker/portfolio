@@ -1953,28 +1953,6 @@ nav > a[aria-current]::after {
  .brand{font-size:20px;gap:8px}
 }
 
-/* ─────────── общий «мир»: тот же фон, что на главной — небо, облака, город ─────────── */
-.world{position:absolute;inset:0;overflow:hidden;pointer-events:none;z-index:0}
-.w-sky{position:absolute;inset:0;background:linear-gradient(170deg,#CFE0FB 0%,#C6D4FA 38%,#D3CDF6 72%,#E3D8F6 100%)}
-.rest .w-sky{background:linear-gradient(180deg,#DDD9F7 0%,#D3CDF6 45%,#C9D5FA 100%)}
-.w-sun{position:absolute;left:-8vw;top:-14vh;width:min(640px,60vw);aspect-ratio:1;border-radius:50%;
- background:radial-gradient(closest-side,rgba(255,255,255,.75),rgba(255,255,255,.35) 60%,rgba(255,255,255,0))}
-.w-cloud{position:absolute;display:block;max-width:none;height:auto}
-.wc1{top:3%;right:-8%;width:min(760px,70vw);opacity:.6}
-.wc2{top:34%;left:-14%;width:min(820px,76vw);opacity:.5}
-.wc3{top:58%;right:-12%;width:min(700px,66vw);opacity:.45}
-.w-city{position:absolute;left:50%;bottom:0;width:max(1200px,106%);max-width:none;height:auto;translate:-50% 0;opacity:.62;
- -webkit-mask-image:linear-gradient(to top,#000 0,#000 35%,transparent 92%);mask-image:linear-gradient(to top,#000 0,#000 35%,transparent 92%)}
-.rest>.world{z-index:0}
-.rest-grid{z-index:0}
-
-
-/* ─────────── смена языка: мягкое затухание контента ─────────── */
-#app{transition:opacity .16s ease}
-html.lang-swap #app{opacity:0}
-.rest .sec,.rest .foot{position:relative;z-index:2}
-
-
 /* ─────────── единый ритм отступов ─────────── */
 :root{--gap-sec:clamp(56px,6.5vw,96px);--gap-head:clamp(24px,2.6vw,36px)}
 .rest .sec{padding-top:var(--gap-sec);padding-bottom:0}
@@ -2032,8 +2010,6 @@ html.lang-swap #app{opacity:0}
 .shot figcaption{position:relative;z-index:1}
 
 
-.rest .wc1{opacity:.85}.rest .wc2{opacity:.75}.rest .wc3{opacity:.7}
-.rest .w-city{opacity:.5}
 /* без размытия под карточками: оно пересчитывается на каждом кадре прокрутки */
 .cat-tag,.mx-card{backdrop-filter:none;-webkit-backdrop-filter:none}
 .mx-card{background:rgba(255,255,255,.78)}
