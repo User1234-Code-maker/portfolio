@@ -9,12 +9,18 @@ import album from '../assets/img/cover-album-1234.webp'
 import albumSm from '../assets/img/cover-album-1234-sm.webp'
 import ppxvl from '../assets/img/cover-single-ppxvl.webp'
 import ppxvlSm from '../assets/img/cover-single-ppxvl-sm.webp'
+import yaVAd from '../assets/img/cover-single-ya-v-ad.webp'
+import yaVAdSm from '../assets/img/cover-single-ya-v-ad-sm.webp'
+import yaTebya from '../assets/img/cover-single-ya-tebya-lyublyu.webp'
+import yaTebyaSm from '../assets/img/cover-single-ya-tebya-lyublyu-sm.webp'
 
 export const artistName = 'User1234'
 
 export const releases: Release[] = [
   {
     id: 'ya-tebya-lyublyu',
+    cover: yaTebya,
+    coverSm: yaTebyaSm,
     title: 'Я тебя люблю',
     kind: 'single',
     date: '2026-09-25',
@@ -31,6 +37,8 @@ export const releases: Release[] = [
   },
   {
     id: 'ya-v-ad',
+    cover: yaVAd,
+    coverSm: yaVAdSm,
     title: 'Я в ад',
     kind: 'single',
     date: '2026-06-02',

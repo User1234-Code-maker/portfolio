@@ -6,6 +6,9 @@
    ───────────────────────────────────────────────────────────── */
 import coverGameStudio from '../assets/img/cover-game-studio.webp'
 import coverPortfolio from '../assets/img/cover-portfolio.webp'
+import gsHome from '../assets/img/shot-game-studio-home.webp'
+import gsServices from '../assets/img/shot-game-studio-services.webp'
+import gsNews from '../assets/img/shot-game-studio-news.webp'
 import shot1 from '../assets/img/shot-portfolio-1.webp'
 import shot2 from '../assets/img/shot-portfolio-2.webp'
 import shot3 from '../assets/img/shot-portfolio-3.webp'
@@ -38,6 +41,7 @@ export const projects: Project[] = [
     cover: coverGameStudio,
     hue: 232,
     featured: true,
+    shots: [gsHome, gsServices, gsNews],
   },
   {
     slug: 'label-erp',
