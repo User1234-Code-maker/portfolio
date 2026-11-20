@@ -313,11 +313,12 @@ function adoptHero() {
     return
   }
   const r = hero.getBoundingClientRect()
-  if (!r.width) {
+  // пока стили не применились, картинка имеет «родные» 342 px — такой размер не берём, ждём
+  if (!r.width || r.width > 90) {
     if (adoptTries++ < 40) requestAnimationFrame(adoptHero)
     return
   }
-  heroW.value = r.width
+  heroW.value = Math.min(r.width, 68)
   px = r.left
   py = r.top
   free.value = true

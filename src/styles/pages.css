@@ -240,6 +240,7 @@ nav > a[aria-current]::after {
 }
 .wc2 {
   top: min(640px, 70vh);
+  top: min(640px, 70svh);
   left: -160px;
   width: min(460px, 56vw);
   opacity: 0.38;
@@ -280,6 +281,7 @@ nav > a[aria-current]::after {
 .page {
   position: relative;
   min-height: 100vh;
+  min-height: 100svh;
   display: flex;
   flex-direction: column;
   overflow: hidden;
@@ -2601,20 +2603,32 @@ nav > a[aria-current]::after {
 }
 @media (max-width: 600px) {
   .soc.big.round {
-    gap: 12px;
+    gap: 10px;
+  }
+  .soc.big.round a {
+    width: 42px;
+    height: 42px;
+  }
+  .soc.big.round svg {
+    width: 20px;
+    height: 20px;
   }
   .foot-soc {
     display: flex;
-    flex-basis: 100%;
-    order: 3;
-    gap: 12px;
-    margin: 6px 0 4px;
+    gap: 8px;
   }
-  .foot .brand {
-    flex-basis: 100%;
+  .foot-soc.soc.round a {
+    width: 34px;
+    height: 34px;
+    box-shadow: none;
+  }
+  .foot-soc.soc.round svg {
+    width: 17px;
+    height: 17px;
   }
   .foot .footmeta {
-    order: 4;
+    flex-basis: 100%;
+    justify-content: space-between;
   }
   .menu-contact {
     display: flex;

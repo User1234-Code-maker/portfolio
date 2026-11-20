@@ -7,7 +7,8 @@ export function useParallax(root: Ref<HTMLElement | null>) {
 
   onMounted(() => {
     const el = root.value
-    if (!el || matchMedia('(prefers-reduced-motion: reduce)').matches) return
+    // на сенсорных экранах параллакса нет: в Chrome и Telegram он давал рывки при прокрутке
+    if (!el || matchMedia('(prefers-reduced-motion: reduce), (hover: none)').matches) return
 
     const layers = [...el.querySelectorAll<HTMLElement>('[data-par]')]
     let mx = 0
@@ -21,10 +22,7 @@ export function useParallax(root: Ref<HTMLElement | null>) {
       ty = e.clientY / innerHeight - 0.5
       wake()
     }
-    // на сенсорных экранах слои при прокрутке не двигаем: во встроенных браузерах это давало рывки
-    const touch = matchMedia('(hover: none)').matches
     const onScroll = () => {
-      if (touch) return
       sy = Math.min(scrollY, innerHeight)
       wake()
     }
