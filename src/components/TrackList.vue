@@ -2,7 +2,7 @@
 import { computed } from 'vue'
 import UiIcon from './UiIcon.vue'
 import { useLang } from '../composables/useLang'
-import { downloadName, fmt, seek, toggle, trackUrl, usePlayer } from '../composables/usePlayer'
+import { fmt, seek, toggle, usePlayer } from '../composables/usePlayer'
 import type { Release } from '../data/types'
 
 const props = defineProps<{ release: Release }>()
@@ -41,25 +41,6 @@ const onSeek = (e: Event) => seek(Number((e.target as HTMLInputElement).value))
           </span>
           <span class="tl-t">{{ tr.title }}</span>
         </button>
-        <span v-if="tr.src" class="tl-act">
-          <button
-            type="button"
-            class="tl-btn pp"
-            :aria-label="label(i, tr.title)"
-            @click="toggle(release, i)"
-          >
-            <UiIcon :name="isPlaying(i) ? 'pause' : 'play'" />
-          </button>
-          <a
-            class="tl-btn"
-            :href="trackUrl(tr)"
-            :download="downloadName(tr)"
-            :aria-label="`${t('np_download')}: ${tr.title}`"
-            :title="t('np_download')"
-          >
-            <UiIcon name="download" />
-          </a>
-        </span>
         <span class="tl-len">{{ isCur(i) ? fmt(p.time) + ' / ' : '' }}{{ tr.length }}</span>
       </div>
       <div v-if="isCur(i)" class="tl-prog" :style="{ '--p': pct + '%' }">

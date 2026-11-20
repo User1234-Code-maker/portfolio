@@ -101,13 +101,12 @@ describe('App', () => {
     expect(w.find('[role="alert"]').exists()).toBe(true)
   })
 
-  it('музыка: показан альбом с треклистом, у каждого трека есть файл и кнопка скачать', async () => {
+  it('музыка: показан альбом с треклистом, у каждого трека есть кнопка-строка для запуска', async () => {
     const w = await open('/music')
     expect(w.get('.mx-card h2').text()).toBe('1234')
     expect(w.findAll('.tl-row').length).toBe(10)
     expect(w.find('iframe').exists()).toBe(false)
-    const dl = w.findAll('.tl-act a[download]')
-    expect(dl.length).toBe(10)
-    expect(dl[1]!.attributes('href')).toContain('audio/album-1234/02-halat.mp3')
+    expect(w.findAll('.tl-main').length).toBe(10)
+    expect(w.find('.tl-act').exists()).toBe(false)
   })
 })

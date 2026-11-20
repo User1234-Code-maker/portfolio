@@ -139,8 +139,6 @@ test.describe('функциональность', () => {
     await page.goto('/music')
     await expect(page.locator('.np')).toHaveCount(0)
     const row = page.locator('.tl-row').nth(1)
-    await row.hover()
-    await expect(row.locator('.tl-act')).toBeVisible()
     await row.locator('.tl-main').click()
     await expect(page.locator('.np')).toBeVisible()
     await expect(page.locator('.np-info b')).toHaveText('Халат')
@@ -150,8 +148,6 @@ test.describe('функциональность', () => {
       .not.toBe('0:00')
     await page.getByRole('button', { name: 'Pause' }).first().click()
     await expect(row).not.toHaveClass(/playing/)
-    // скачивание: ссылка ведёт на mp3 с понятным именем
-    await expect(row.locator('a[download]')).toHaveAttribute('download', 'User1234 - Халат.mp3')
     // музыка не пропадает при переходе на другую страницу
     await page.getByRole('link', { name: 'About' }).first().click()
     await expect(page.locator('.np')).toBeVisible()

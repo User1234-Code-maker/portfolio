@@ -1,5 +1,5 @@
 <script setup lang="ts">
-defineProps<{ name: 'play' | 'pause' | 'download' | 'next' | 'prev' | 'close' }>()
+defineProps<{ name: 'play' | 'pause' | 'next' | 'prev' | 'close' }>()
 </script>
 
 <template>
@@ -17,7 +17,6 @@ defineProps<{ name: 'play' | 'pause' | 'download' | 'next' | 'prev' | 'close' }>
       v-else-if="name === 'prev'"
       d="M18 5.6v12.8a.8.8 0 0 1-1.2.7l-8.6-6.4a.8.8 0 0 1 0-1.3l8.6-6.5a.8.8 0 0 1 1.2.7zM4.8 5H7v14H4.8z"
     />
-    <path v-else-if="name === 'download'" class="st" d="M12 4v11m0 0-4.2-4.2M12 15l4.2-4.2M5 19.5h14" />
     <path v-else class="st" d="M6.5 6.5l11 11m0-11-11 11" />
   </svg>
 </template>
