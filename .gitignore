@@ -5,4 +5,3 @@ dist
 playwright-report
 test-results
 .vite
-_to_delete/

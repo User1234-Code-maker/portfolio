@@ -27,33 +27,20 @@ watchEffect(() => {
 
 export function useLang() {
   const t = (key: string): string => site.t[lang.value][key] ?? key
-  // Смена языка без скачка: страница плавно растворяется и проявляется уже на новом языке.
-  // View Transitions (Chrome, Safari) делают снимок и сводят старое с новым; без них короткий fade.
+  // Смена языка: короткое мягкое затухание контента, текст меняется, пока он невидим.
+  // Только opacity, без снимков экрана и blur, поэтому ничего не тормозит.
   const setLang = (l: Lang) => {
     if (l === lang.value) return
-    const root = document.documentElement
     if (matchMedia('(prefers-reduced-motion: reduce)').matches) {
       lang.value = l
       return
     }
-    const vt = (
-      document as Document & {
-        startViewTransition?: (cb: () => Promise<void>) => { finished: Promise<void> }
-      }
-    ).startViewTransition
-    if (typeof vt === 'function') {
-      root.classList.add('lang-vt')
-      vt.call(document, async () => {
-        lang.value = l
-        await nextTick()
-      }).finished.finally(() => root.classList.remove('lang-vt'))
-    } else {
-      root.classList.add('lang-swap')
-      window.setTimeout(() => {
-        lang.value = l
-        nextTick().then(() => requestAnimationFrame(() => root.classList.remove('lang-swap')))
-      }, 170)
-    }
+    const root = document.documentElement
+    root.classList.add('lang-swap')
+    window.setTimeout(() => {
+      lang.value = l
+      nextTick().then(() => requestAnimationFrame(() => root.classList.remove('lang-swap')))
+    }, 140)
   }
   return { lang, t, setLang }
 }

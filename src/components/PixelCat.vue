@@ -2,7 +2,6 @@
 import { computed, onBeforeUnmount, onMounted, ref } from 'vue'
 import { useRoute } from 'vue-router'
 import { useLang } from '../composables/useLang'
-import { burst, bus, type CollectDetail } from '../composables/useStars'
 import { reducedMotion } from '../utils/pageScroll'
 import catUrl from '../assets/img/cat.png'
 
@@ -178,8 +177,6 @@ function pet() {
   petTimer = window.setTimeout(() => (pets = 0), 6000)
   wake()
   jump()
-  const r = el.value?.getBoundingClientRect()
-  if (r) burst(r.left + r.width / 2, r.top + 6, 6)
   const lines = [t('cat_pet_1'), t('cat_pet_2'), t('cat_pet_3')]
   speak(lines[Math.min(pets - 1, lines.length - 1)] ?? t('cat_pet_1'))
   for (let i = 0; i < 3; i++) {
@@ -193,7 +190,7 @@ function pet() {
   }
 }
 
-// серия кликов: кот несётся через весь экран и обратно, оставляя искры
+// серия кликов: кот несётся через весь экран и обратно,
 function zoomies() {
   if (reducedMotion()) return
   busy = true
@@ -205,8 +202,6 @@ function zoomies() {
     later(() => {
       const f = floor(k * (W - size()))
       goto(f.x, f.y - (i % 2) * 40, 0.42, 'zoom')
-      const r = el.value?.getBoundingClientRect()
-      if (r) burst(r.left + r.width / 2, r.top + r.height / 2, 10)
     }, i * 460),
   )
   later(
@@ -219,25 +214,6 @@ function zoomies() {
   )
 }
 
-// звезда поймана: кот бежит к ней и съедает
-function onCollect(e: Event) {
-  if (!visible.value || reducedMotion()) return
-  const { x: sx, y: sy } = (e as CustomEvent<CollectDetail>).detail
-  busy = true
-  clearTimers()
-  goto(sx - size() / 2, sy - height() / 2, 0.5, 'jump')
-  later(() => {
-    speak(t('cat_star'), 1400)
-    jump()
-    burst(sx, sy, 8)
-  }, 560)
-  later(() => {
-    busy = false
-    peek()
-    schedule()
-  }, 2200)
-}
-
 const onScroll = () => (scrolled.value = window.scrollY > window.innerHeight * 0.9)
 
 let sleepInt = 0
@@ -246,7 +222,6 @@ onMounted(() => {
   window.addEventListener('scroll', onScroll, { passive: true })
   window.addEventListener('pointermove', onMove, { passive: true })
   window.addEventListener('keydown', wake)
-  bus.addEventListener('collect', onCollect)
   const f = edgeSpot(Math.random() < 0.5 ? 'l' : 'r', false)
   x.value = f.x
   y.value = f.y
@@ -265,7 +240,6 @@ onBeforeUnmount(() => {
   window.removeEventListener('scroll', onScroll)
   window.removeEventListener('pointermove', onMove)
   window.removeEventListener('keydown', wake)
-  bus.removeEventListener('collect', onCollect)
 })
 </script>
 

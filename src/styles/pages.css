@@ -212,71 +212,21 @@ nav > a[aria-current]::after {
   }
 }
 
-/* ─────────── общий «мир»: сетка, облака, силуэт, звёзды ─────────── */
-.world {
-  position: absolute;
-  inset: 0;
-  overflow: hidden;
-  pointer-events: none;
-  z-index: 0;
-}
-.rest .world {
-  z-index: 0;
-}
-.w-cloud,
-.w-star,
-.w-city {
-  position: absolute;
-  display: block;
-  max-width: none;
-  height: auto;
-}
-.w-cloud {
-  opacity: 0.5;
-  translate: 0 calc(var(--sy, 0) * -0.03px);
-}
-.wc1 {
-  top: 70px;
-  right: -120px;
-  width: min(520px, 60vw);
-}
-.wc2 {
-  top: min(640px, 70vh);
-  left: -160px;
-  width: min(460px, 56vw);
-  opacity: 0.38;
-  translate: 0 calc(var(--sy, 0) * -0.06px);
-}
-.w-city {
-  left: 50%;
-  bottom: 0;
-  width: max(1100px, 100%);
-  translate: -50% 0;
-  opacity: 0.2;
-  -webkit-mask-image: linear-gradient(to top, #000 0, transparent 70%);
-  mask-image: linear-gradient(to top, #000 0, transparent 70%);
-}
-.w-star {
-  filter: drop-shadow(0 0 8px rgba(124, 92, 255, 0.5));
-  animation: tw 5s ease-in-out infinite;
-}
-.ws1 {
-  top: 210px;
-  left: 7%;
-  width: 30px;
-}
-.ws2 {
-  top: 120px;
-  right: 22%;
-  width: 22px;
-  animation-delay: 1.7s;
-}
-.rest > .world {
-  inset: 0;
-}
-.rest-grid {
-  z-index: 0;
-}
+/* ─────────── общий «мир»: тот же фон, что на главной — небо, облака, город ─────────── */
+.world{position:absolute;inset:0;overflow:hidden;pointer-events:none;z-index:0}
+.page .world{position:fixed}
+.w-sky{position:absolute;inset:0;background:linear-gradient(170deg,#CFE0FB 0%,#C6D4FA 38%,#D3CDF6 72%,#E3D8F6 100%)}
+.rest .w-sky{background:linear-gradient(180deg,#DDD9F7 0%,#D3CDF6 45%,#C9D5FA 100%)}
+.w-sun{position:absolute;left:-8vw;top:-14vh;width:min(640px,60vw);aspect-ratio:1;border-radius:50%;
+ background:radial-gradient(closest-side,rgba(255,255,255,.75),rgba(255,255,255,.35) 60%,rgba(255,255,255,0))}
+.w-cloud{position:absolute;display:block;max-width:none;height:auto}
+.wc1{top:3%;right:-8%;width:min(760px,70vw);opacity:.6}
+.wc2{top:34%;left:-14%;width:min(820px,76vw);opacity:.5}
+.wc3{top:58%;right:-12%;width:min(700px,66vw);opacity:.45}
+.w-city{position:absolute;left:50%;bottom:0;width:max(1200px,106%);max-width:none;height:auto;translate:-50% 0;opacity:.62;
+ -webkit-mask-image:linear-gradient(to top,#000 0,#000 35%,transparent 92%);mask-image:linear-gradient(to top,#000 0,#000 35%,transparent 92%)}
+.rest>.world{z-index:0}
+.rest-grid{z-index:0}
 
 /* ─────────── каркас внутренней страницы ─────────── */
 .page {
@@ -1852,77 +1802,17 @@ nav > a[aria-current]::after {
  .brand{font-size:20px;gap:8px}
 }
 
-/* ─────────── смена языка: плавное растворение вместо скачка ─────────── */
-html.lang-vt::view-transition-old(root),html.lang-vt::view-transition-new(root){mix-blend-mode:normal;animation:none}
-html.lang-vt::view-transition-old(root){animation:langOut .26s ease-in both}
-html.lang-vt::view-transition-new(root){animation:langIn .5s cubic-bezier(.2,.8,.2,1) both}
-@keyframes langOut{to{opacity:0;filter:blur(7px)}}
-@keyframes langIn{from{opacity:0;filter:blur(9px);transform:translateY(12px)}}
-#app{transition:opacity .25s ease}
-html.lang-swap #app{opacity:0;transition-duration:.16s}
-
-/* ═════════ живой фон: северное сияние, дрейфующие облака, мерцание ═════════ */
-.world::before,.world::after{content:"";position:absolute;inset:0;pointer-events:none;z-index:0}
-.world::before{background:linear-gradient(160deg,rgba(255,206,238,.5),rgba(190,170,255,.0) 45%,rgba(150,215,255,.45));animation:wash 17s ease-in-out infinite alternate}
-.world::after{background:linear-gradient(20deg,rgba(150,200,255,.5),rgba(255,200,240,0) 50%,rgba(205,170,255,.5));opacity:0;animation:wash 17s ease-in-out -8s infinite alternate}
-@keyframes wash{0%{opacity:.05}100%{opacity:.85}}
-.aurora{position:absolute;inset:0;overflow:hidden;z-index:0}
-.ab{position:absolute;display:block;width:min(74vw,960px);aspect-ratio:1;border-radius:50%;will-change:transform;opacity:.78;
- background:radial-gradient(closest-side,var(--c),rgba(255,255,255,0) 74%);animation:abDrift var(--t,28s) ease-in-out infinite alternate}
-.a1{--c:rgba(140,180,255,.9);left:-18vw;top:1%;--t:26s}
-.a2{--c:rgba(222,168,255,.8);right:-24vw;top:13%;--t:33s;animation-delay:-6s}
-.a3{--c:rgba(130,224,255,.75);left:8vw;top:34%;--t:29s;animation-delay:-11s}
-.a4{--c:rgba(255,182,236,.7);right:-14vw;top:52%;--t:36s;animation-delay:-3s}
-.a5{--c:rgba(168,158,255,.8);left:-20vw;top:70%;--t:31s;animation-delay:-15s}
-.a6{--c:rgba(150,216,255,.75);right:-14vw;top:88%;--t:27s;animation-delay:-9s}
-@keyframes abDrift{0%{transform:translate3d(0,0,0) scale(1)}50%{transform:translate3d(9vw,-6vh,0) scale(1.18)}100%{transform:translate3d(-7vw,7vh,0) scale(.94)}}
-.shimmer{position:absolute;top:-10%;bottom:-10%;left:0;width:34vw;z-index:1;opacity:.55;pointer-events:none;
- background:linear-gradient(100deg,rgba(255,255,255,0),rgba(255,255,255,.55),rgba(255,255,255,0));transform:skewX(-14deg);translate:-60vw 0;animation:sweep 15s ease-in-out infinite}
-@keyframes sweep{0%{translate:-60vw 0}55%,100%{translate:140vw 0}}
-.drift{position:absolute;left:0;display:block;z-index:1;will-change:transform;animation:cdrift var(--t) linear infinite;animation-delay:var(--dl,0s)}
-.drift .w-cloud{position:static;display:block;width:var(--w);opacity:var(--o);translate:0 calc(var(--sy,0) * var(--p) * 1px)}
-.dr1{top:6%;--t:120s;--dl:-20s;--w:min(520px,60vw);--o:.55;--p:-.04}
-.dr2{top:36%;--t:150s;--dl:-90s;--w:min(460px,56vw);--o:.4;--p:-.07}
-.dr3{top:66%;--t:130s;--dl:-60s;--w:min(560px,64vw);--o:.45;--p:-.05}
-@keyframes cdrift{from{transform:translate3d(-45vw,0,0)}to{transform:translate3d(110vw,0,0)}}
-.twk{position:absolute;left:var(--x);top:var(--y);width:12px;height:12px;z-index:1;background:#fff;opacity:0;
- clip-path:polygon(50% 0,59% 41%,100% 50%,59% 59%,50% 100%,41% 59%,0 50%,41% 41%);filter:drop-shadow(0 0 4px rgba(124,92,255,.9));animation:twkl 4.6s ease-in-out var(--dl) infinite}
-@keyframes twkl{0%,100%{opacity:0;transform:scale(.3)}50%{opacity:.95;transform:scale(1.15)}}
-html.rainbow .aurora{animation:hueSpin 12s linear infinite}
-@keyframes hueSpin{to{filter:hue-rotate(360deg)}}
-.rest>.world{z-index:0}
+/* ─────────── смена языка: мягкое затухание контента ─────────── */
+#app{transition:opacity .16s ease}
+html.lang-swap #app{opacity:0}
 .rest .sec,.rest .foot{position:relative;z-index:2}
-
-/* ─────────── игровой слой ─────────── */
-.starfield{position:fixed;inset:0;width:100vw;height:100vh;pointer-events:none;z-index:50}
-.stars-hud{position:fixed;left:max(14px,2vw);bottom:max(14px,2vh);z-index:56;animation:hudIn .5s cubic-bezier(.2,.9,.3,1.4)}
-.hud-chip{display:inline-flex;align-items:center;gap:8px;font:800 14px Mn;color:var(--ink);padding:10px 16px;border-radius:999px;border:1px solid #fff;
- background:rgba(255,255,255,.85);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);box-shadow:0 12px 26px -14px rgba(30,42,107,.6)}
-.hud-chip span:first-child{color:#6B5BD6}
-button.hud-chip{cursor:pointer;transition:scale .15s,background .2s}
-button.hud-chip:hover{background:#fff}
-button.hud-chip:active{scale:.95}
-.stars-hud.done .hud-chip{background:linear-gradient(120deg,#FFE3F6,#DCE6FF,#E6DCFF)}
-.stars-hud.pulse .hud-chip{animation:pop .5s cubic-bezier(.2,.9,.3,1.4)}
-@keyframes hudIn{from{opacity:0;translate:0 14px;scale:.8}to{opacity:1;translate:0 0;scale:1}}
-.stars-toast{position:fixed;left:50%;bottom:max(70px,9vh);translate:-50% 12px;z-index:57;max-width:min(92vw,420px);margin:0;padding:11px 20px;border-radius:999px;
- background:var(--ink);color:#fff;font:800 14px Mn;text-align:center;opacity:0;pointer-events:none;transition:opacity .25s,translate .3s cubic-bezier(.2,.9,.3,1.3)}
-.stars-toast.on{opacity:1;translate:-50% 0}
-.deco.got{animation:none!important;opacity:0!important;scale:.2;transition:opacity .35s,scale .35s}
-@media (prefers-reduced-motion:reduce){
- .world::before,.world::after,.ab,.shimmer,.drift,.twk{animation:none}
- .world::before{opacity:.45}.twk{opacity:.7}
- .starfield{display:none}
-}
 
 /* огромная иероглифическая подпись справа от заголовка заполняет пустоту */
 .page-head{position:relative}
 .ph-mark{position:absolute;right:clamp(10px,4vw,70px);top:20px;z-index:-1;font-weight:400;font-size:clamp(70px,8.2vw,130px);line-height:1;white-space:nowrap;
- letter-spacing:.12em;color:rgba(255,255,255,.18);-webkit-text-stroke:1.5px rgba(107,91,214,.3);pointer-events:none;user-select:none;animation:markFloat 10s ease-in-out infinite alternate}
+ letter-spacing:.12em;color:rgba(255,255,255,.18);-webkit-text-stroke:1.5px rgba(107,91,214,.3);pointer-events:none;user-select:none;animation:none ease-in-out infinite alternate}
 @keyframes markFloat{from{translate:0 0}to{translate:0 22px}}
 @media (max-width:600px){.ph-mark{font-size:92px;opacity:.75;top:70px;right:4px}}
-.ab{opacity:1}
-.a1{--c:rgba(120,165,255,1)}.a2{--c:rgba(214,150,255,.95)}.a3{--c:rgba(110,222,255,.9)}.a4{--c:rgba(255,160,226,.85)}.a5{--c:rgba(150,140,255,.95)}.a6{--c:rgba(130,210,255,.9)}
 
 /* ─────────── единый ритм отступов ─────────── */
 :root{--gap-sec:clamp(56px,6.5vw,96px);--gap-head:clamp(24px,2.6vw,36px)}
@@ -2001,3 +1891,5 @@ html.hero-in .l-wash{animation:heroFade 1.1s ease-out both}
 @media (prefers-reduced-motion:reduce){html.hero-pre .hero *{opacity:1!important}}
 .ph-mark{opacity:.55}
 @media (max-width:1100px){.ph-mark{display:none}}
+.rest .wc1{opacity:.85}.rest .wc2{opacity:.75}.rest .wc3{opacity:.7}
+.rest .w-city{opacity:.5}

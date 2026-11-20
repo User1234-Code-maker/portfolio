@@ -4,7 +4,6 @@ import { useRoute } from 'vue-router'
 import { useLang } from './composables/useLang'
 import { projectBySlug } from './data/projects'
 import PageVeil from './components/PageVeil.vue'
-import StarField from './components/StarField.vue'
 import PixelCat from './components/PixelCat.vue'
 import { pageReady } from './utils/pageScroll'
 
@@ -39,5 +38,4 @@ const pageKey = () => route.path
   </RouterView>
   <PageVeil :trigger="veilKey" />
   <PixelCat />
-  <StarField />
 </template>

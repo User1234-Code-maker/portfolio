@@ -261,11 +261,11 @@ test.describe('заставка', () => {
 })
 
 test.describe('игровой слой и котик', () => {
-  test('игровой canvas и котик есть на странице, ошибок нет', async ({ page }) => {
+  test('фон и котик есть на странице, ошибок нет', async ({ page }) => {
     const errors: string[] = []
     page.on('pageerror', (e) => errors.push(String(e)))
     await page.goto('/')
-    await expect(page.locator('.starfield')).toBeAttached()
+    await expect(page.locator('.world').first()).toBeAttached()
     for (let i = 0; i < 10; i++) await page.mouse.move(200 + i * 80, 300 + (i % 3) * 50)
     await expect(page.locator('.pcat')).toBeAttached()
     expect(errors).toEqual([])
