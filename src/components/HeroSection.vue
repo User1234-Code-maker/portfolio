@@ -12,7 +12,10 @@ useParallax(root)
 let ticking = false
 const setFade = () => {
   ticking = false
-  const k = Math.min(1, Math.max(0, scrollY / (innerHeight * 0.3)))
+  // на телефонах затухание включено сразу, на широких экранах растёт при прокрутке
+  const k = matchMedia('(max-width:700px)').matches
+    ? 1
+    : Math.min(1, Math.max(0, scrollY / (innerHeight * 0.3)))
   root.value?.style.setProperty('--hf', k.toFixed(3))
 }
 const onScroll = () => {
