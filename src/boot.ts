@@ -27,9 +27,9 @@ export function finishBoot() {
     if (closed) return
     closed = true
     try {
-      localStorage.setItem(BOOT_KEY, '1')
+      sessionStorage.setItem(BOOT_KEY, '1')
     } catch {
-      /* без localStorage заставка просто покажется снова */
+      /* без sessionStorage заставка просто покажется снова */
     }
     el.classList.add('out')
     root.classList.remove('booting')

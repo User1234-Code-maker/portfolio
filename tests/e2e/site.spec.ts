@@ -234,7 +234,7 @@ test.describe('заставка', () => {
     await page.goto('/')
     await expect(page.locator('#boot')).toBeVisible()
     await expect(page.locator('#boot')).toHaveCount(0, { timeout: 6000 })
-    expect(await page.evaluate(() => localStorage.getItem('boot-v1'))).toBe('1')
+    expect(await page.evaluate(() => sessionStorage.getItem('boot-v1'))).toBe('1')
     await page.reload()
     await expect(page.locator('#boot')).toBeHidden()
   })
@@ -247,7 +247,7 @@ test.describe('заставка', () => {
   })
 
   test('ссылка ?intro показывает заставку снова', async ({ page }) => {
-    await page.addInitScript(() => localStorage.setItem('boot-v1', '1'))
+    await page.addInitScript(() => sessionStorage.setItem('boot-v1', '1'))
     await page.goto('/?intro')
     await expect(page.locator('#boot')).toBeVisible()
   })
@@ -261,7 +261,7 @@ test.describe('заставка', () => {
   })
 
   test('переходы между страницами не показывают заставку', async ({ page }) => {
-    await page.addInitScript(() => localStorage.setItem('boot-v1', '1'))
+    await page.addInitScript(() => sessionStorage.setItem('boot-v1', '1'))
     await page.goto('/')
     await page.getByRole('navigation', { name: 'Main' }).getByRole('link', { name: 'Projects' }).click()
     await expect(page.locator('h1')).toHaveText('Projects')
@@ -289,7 +289,7 @@ test.describe('фон и язык', () => {
 
 test.describe('котик', () => {
   test.beforeEach(async ({ page }) => {
-    await page.addInitScript(() => localStorage.setItem('boot-v1', '1'))
+    await page.addInitScript(() => sessionStorage.setItem('boot-v1', '1'))
   })
 
   test('его можно перетащить, пока несут, он кричит, потом остаётся на месте', async ({ page }) => {
@@ -335,7 +335,7 @@ test.describe('котик', () => {
 test.describe('котик живёт сам', () => {
   test('идёт сам, не выходя за экран, и реагирует на клик рядом', async ({ page }) => {
     await page.addInitScript(() => {
-      localStorage.setItem('boot-v1', '1')
+      sessionStorage.setItem('boot-v1', '1')
       // ускоряем таймеры, чтобы не ждать десятки секунд
       const st = window.setTimeout
       window.setTimeout = ((fn: TimerHandler, ms?: number, ...a: unknown[]) =>
@@ -355,7 +355,7 @@ test.describe('котик живёт сам', () => {
 
 test.describe('котик на главной', () => {
   test('на главной живёт тот же котик: встаёт на место картинки и его можно унести', async ({ page }) => {
-    await page.addInitScript(() => localStorage.setItem('boot-v1', '1'))
+    await page.addInitScript(() => sessionStorage.setItem('boot-v1', '1'))
     await page.setViewportSize({ width: 1440, height: 800 })
     await page.goto('/')
     await expect(page.locator('.pcat.free')).toBeVisible()

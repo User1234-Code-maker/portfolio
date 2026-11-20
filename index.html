@@ -67,7 +67,7 @@
     </style>
     <noscript><style>#boot{display:none}</style></noscript>
     <script>
-      // заставка только при первом визите (или по ссылке ?intro); без анимации при reduced-motion
+      // заставка один раз за сессию, то есть при каждом новом заходе на сайт (или по ссылке ?intro); без анимации при reduced-motion
       (function () {
         var r = document.documentElement
         window.__bootT = performance.now()
@@ -77,7 +77,7 @@
           if (t) document.head.appendChild(t.content.cloneNode(true))
         }
         try {
-          var seen = localStorage.getItem('boot-v1')
+          var seen = sessionStorage.getItem('boot-v1')
           var forced = /[?&]intro\b/.test(location.search)
           var calm = matchMedia('(prefers-reduced-motion: reduce)').matches
           if ((seen && !forced) || calm) r.classList.add('no-boot')

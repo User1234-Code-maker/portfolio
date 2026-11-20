@@ -3,6 +3,7 @@ import { computed, nextTick, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 import { useRoute } from 'vue-router'
 import { useLang } from '../composables/useLang'
 import { reducedMotion } from '../utils/pageScroll'
+import { usePlayer } from '../composables/usePlayer'
 import catUrl from '../assets/img/cat.png'
 
 // Пасхалка: котик на внутренних страницах. Сидит в своём месте, выглядывает с края,
@@ -41,6 +42,8 @@ let sleepTimer = 0
 let raf = 0
 let moveRaf = 0
 let wanderTimer = 0
+let chatTimer = 0
+const player = usePlayer()
 let lastReact = 0
 
 // Координаты хранятся обычными переменными и пишутся в style напрямую:
@@ -55,6 +58,8 @@ let pressed = false
 let moved = false
 
 const curious = ['cat_curious_1', 'cat_curious_2', 'cat_curious_3']
+const idle = ['cat_idle_1', 'cat_idle_2', 'cat_idle_3', 'cat_idle_4', 'cat_idle_5']
+const listening = ['cat_music_1', 'cat_music_2']
 const lines = ['cat_line_1', 'cat_line_2', 'cat_line_3', 'cat_line_4']
 const screams = ['cat_scream_1', 'cat_scream_2', 'cat_scream_3']
 const landings = ['cat_land_1', 'cat_land_2', 'cat_land_3']
@@ -147,6 +152,7 @@ function onWalkEnd(e: TransitionEvent) {
 }
 function wander() {
   window.clearTimeout(wanderTimer)
+  window.clearTimeout(chatTimer)
   wanderTimer = window.setTimeout(
     async () => {
       if (!dragging.value && !sleepy.value && !walking.value && !document.hidden && el.value) {
@@ -337,6 +343,20 @@ function onRoute(name: unknown) {
   void nextTick().then(adoptHero)
 }
 
+// Время от времени котик что-нибудь бормочет сам. Если играет музыка, иногда комментирует её.
+function chatter() {
+  window.clearTimeout(chatTimer)
+  chatTimer = window.setTimeout(
+    () => {
+      if (!dragging.value && !sleepy.value && !said.value && !document.hidden && el.value) {
+        sayFor(pick(player.playing && Math.random() < 0.6 ? listening : idle), 3600)
+      }
+      chatter()
+    },
+    22000 + Math.random() * 28000,
+  )
+}
+
 function onResize() {
   if (!free.value) return
   clamp()
@@ -349,6 +369,7 @@ onMounted(() => {
   window.addEventListener('pointerdown', onPageDown, { passive: true })
   rest()
   wander()
+  chatter()
   onRoute(route.name)
 })
 onBeforeUnmount(() => {
