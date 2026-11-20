@@ -69,20 +69,6 @@
     </style>
     <noscript><style>#boot{display:none}</style></noscript>
     <script>
-      // Высота экрана для Hero, один раз. В Telegram и Chrome на телефоне окно меняет высоту, когда
-      // прячется панель браузера; если пересчитывать от неё размеры, картинка дёргается при скролле.
-      ;(function () {
-        var w = 0
-        function set() {
-          if (innerWidth === w) return
-          w = innerWidth
-          document.documentElement.style.setProperty('--sh', innerHeight / 100 + 'px')
-        }
-        set()
-        addEventListener('resize', set)
-      })()
-    </script>
-    <script>
       // заставка один раз за сессию, то есть при каждом новом заходе на сайт (или по ссылке ?intro); без анимации при reduced-motion
       (function () {
         var r = document.documentElement
