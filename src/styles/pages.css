@@ -2567,3 +2567,83 @@ nav > a[aria-current]::after {
 .intro-text .avail {
   margin-top: 4px;
 }
+
+/* ─────────── контакты: крупные круглые кнопки, удобные пальцем ─────────── */
+.soc.round a {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.78);
+  border: 1px solid #fff;
+  box-shadow: 0 8px 18px -10px rgba(30, 42, 107, 0.45);
+  opacity: 1;
+}
+.soc.round a:active {
+  scale: 0.93;
+}
+.soc.round svg {
+  width: 21px;
+  height: 21px;
+}
+.soc.big.round a {
+  width: 50px;
+  height: 50px;
+}
+.soc.big.round svg {
+  width: 23px;
+  height: 23px;
+}
+.foot-soc {
+  display: none;
+}
+.menu-contact {
+  display: none;
+}
+@media (max-width: 600px) {
+  .soc.big.round {
+    gap: 12px;
+  }
+  .foot-soc {
+    display: flex;
+    flex-basis: 100%;
+    order: 3;
+    gap: 12px;
+    margin: 6px 0 4px;
+  }
+  .foot .brand {
+    flex-basis: 100%;
+  }
+  .foot .footmeta {
+    order: 4;
+  }
+  .menu-contact {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-top: 6px;
+    padding: 14px 6px 4px;
+    border-top: 1px solid rgba(90, 99, 158, 0.16);
+  }
+  .menu-contact .pill {
+    justify-content: center;
+    color: #fff;
+    padding: 14px 18px;
+  }
+  .menu-contact .soc {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+  }
+  .menu-contact .soc.round a {
+    width: 42px;
+    height: 42px;
+  }
+  .mobile-menu {
+    min-width: min(290px, calc(100vw - 40px));
+  }
+}
+
+/* на главной контакты стоят сразу над футером, повторять иконки там не нужно */
+.rest .foot-soc {
+  display: none;
+}

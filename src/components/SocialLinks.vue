@@ -2,11 +2,11 @@
 import { socials } from '../data/socials'
 import { hrefFor, isExternal } from '../utils/links'
 
-defineProps<{ big?: boolean }>()
+defineProps<{ big?: boolean; round?: boolean }>()
 </script>
 
 <template>
-  <span class="soc" :class="{ big }">
+  <span class="soc" :class="{ big, round }">
     <a
       v-for="s in socials"
       :key="s.key"

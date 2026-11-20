@@ -68,6 +68,10 @@ watch(
       <RouterLink v-for="l in links" :key="l.to" :to="l.to" :class="{ on: !isHome && isOn(l.to) }">{{
         t(l.key)
       }}</RouterLink>
+      <div class="menu-contact">
+        <a class="pill" :href="hrefFor('mail')">{{ t('talk') }}</a>
+        <SocialLinks round />
+      </div>
     </nav>
   </header>
 </template>

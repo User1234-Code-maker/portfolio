@@ -16,7 +16,7 @@ const { t } = useLang()
     </header>
     <div class="contact">
       <a class="pill big" :href="hrefFor('mail')">{{ t('c_mail') }} <span aria-hidden="true">→</span></a>
-      <SocialLinks big />
+      <SocialLinks big round />
     </div>
     <p class="mailtext">
       <a :href="hrefFor('mail')">{{ site.contacts.email }}</a>

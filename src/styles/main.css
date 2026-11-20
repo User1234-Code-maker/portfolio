@@ -157,7 +157,7 @@ h1 em{font-style:normal;color:var(--violet)}
 /* ─────────── телефон ─────────── */
 @media (max-width:600px){
  .wrap{padding:0 20px}
- .soc{display:none}
+ header .right .soc{display:none}
  .l-char img.main{height:50vh;height:50svh;
   -webkit-mask-image:linear-gradient(to bottom,#000 0,#000 78%,rgba(0,0,0,.6) 90%,transparent 100%),
                      linear-gradient(to right,transparent 0,rgba(0,0,0,.85) 5%,#000 12%,#000 88%,rgba(0,0,0,.85) 95%,transparent 100%);
