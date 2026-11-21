@@ -41,7 +41,13 @@ const { chromium, devices } = require('playwright')
     const cdp = await c.newCDPSession(p)
     const before = await p.evaluate(() => window.__shifts)
     for (let i = 0; i < 8; i++)
-      await cdp.send('Input.synthesizeScrollGesture', { x: 200, y: 500, yDistance: -500, gestureSourceType: 'touch', speed: 1600 })
+      await cdp.send('Input.synthesizeScrollGesture', {
+        x: 200,
+        y: 500,
+        yDistance: -500,
+        gestureSourceType: 'touch',
+        speed: 1600,
+      })
     await p.waitForTimeout(500)
     const sy = await p.evaluate(() => scrollY)
     const shift = (await p.evaluate(() => window.__shifts)) - before

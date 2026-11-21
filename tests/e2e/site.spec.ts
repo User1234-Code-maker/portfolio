@@ -88,48 +88,48 @@ test.describe('функциональность', () => {
 
   test('неизвестный адрес и неизвестный проект дают страницу 404', async ({ page }) => {
     await page.goto('/nowhere')
-    await expect(page.locator('.nf-code')).toBeVisible()
+    await expect(page.locator('.nf-num')).toBeVisible()
     await page.goto('/projects/nope')
-    await expect(page.locator('.nf-code')).toBeVisible()
+    await expect(page.locator('.nf-num')).toBeVisible()
   })
 
   test('фильтр проектов показывает только выбранную категорию', async ({ page }) => {
     await page.goto('/projects')
-    await expect(page.locator('.pcard').first()).toBeVisible()
-    const all = await page.locator('.pcard').count()
+    await expect(page.locator('.gal-card').first()).toBeVisible()
+    const all = await page.locator('.gal-card').count()
     await page.getByRole('button', { name: /Telegram Bots/ }).click()
-    await expect(page.locator('.pcard')).toHaveCount(1)
-    await expect(page.locator('.pcard .cat-tag')).toHaveText(['Telegram Bots'])
+    await expect(page.locator('.gal-card')).toHaveCount(1)
+    await expect(page.locator('.gal-card .gal-meta span:first-child')).toHaveText(['Telegram Bots'])
     await page.getByRole('button', { name: /^All/ }).click()
-    await expect(page.locator('.pcard')).toHaveCount(all)
+    await expect(page.locator('.gal-card')).toHaveCount(all)
   })
 
   test('у открытого проекта есть рабочие ссылки, у проектов под NDA их нет', async ({ page }) => {
     await page.goto('/projects')
-    const real = page.locator('.pcard', { hasText: 'Game Studio' })
+    const real = page.locator('.gal-card', { hasText: 'Game Studio' })
     await expect(real.locator('a[href^="https://"]')).toHaveCount(2)
-    const nda = page.locator('.pcard', { hasText: 'Telegram' })
+    const nda = page.locator('.gal-card', { hasText: 'Telegram' })
     await expect(nda.locator('a[href^="https://"]')).toHaveCount(0)
-    await expect(nda.locator('.badge.nda')).toBeVisible()
+    await expect(nda.locator('.gal-badge')).toBeVisible()
   })
 
   test('страница проекта показывает схему и ссылку на следующий проект', async ({ page }) => {
     await page.goto('/projects/game-studio-website')
-    await expect(page.locator('.arch li')).toHaveCount(4)
-    await page.locator('.pj-next a').click()
+    await expect(page.locator('.flow li')).toHaveCount(4)
+    await page.locator('.pd-next').click()
     await expect(page).toHaveURL(/\/projects\/label-erp$/)
   })
 
   test('музыка: альбом с треклистом, смена релиза, фильтр и ссылки на площадки', async ({ page }) => {
     await page.goto('/music')
-    await expect(page.locator('.mx-card h2')).toHaveText('1234')
+    await expect(page.locator('.mu-player h2')).toHaveText('1234')
     await expect(page.locator('.tl-row')).toHaveCount(10)
     await page.getByRole('button', { name: 'Singles' }).click()
-    await expect(page.locator('.rel')).toHaveCount(3)
-    await page.locator('.rel-cover').first().click()
+    await expect(page.locator('.mu-rel')).toHaveCount(3)
+    await page.locator('.mu-rel-btn').first().click()
     await expect(page.locator('.tl-row')).toHaveCount(1)
     const hrefs = await page
-      .locator('.plat')
+      .locator('.mu-plats a')
       .evaluateAll((els) => els.map((e) => (e as HTMLAnchorElement).href))
     expect(hrefs.some((h) => h.includes('soundcloud.com'))).toBe(true)
     expect(hrefs.some((h) => h.includes('spotify.com'))).toBe(true)
@@ -172,20 +172,33 @@ test.describe('функциональность', () => {
 
   test('контакты: только настоящие ссылки из данных', async ({ page }) => {
     await page.goto('/contact')
-    await page.locator('.chan').first().waitFor()
+    await page.locator('.ct-card').first().waitFor()
+    await expect(page.locator('.ct-mail-addr')).toHaveAttribute('href', 'mailto:bogdan.korzun2003@gmail.com')
     const hrefs = await page
-      .locator('.chan')
+      .locator('.ct-card')
       .evaluateAll((els) => els.map((e) => (e as HTMLAnchorElement).href))
-    expect(hrefs).toHaveLength(6)
-    expect(hrefs[0]).toBe('mailto:bogdan.korzun2003@gmail.com')
-    for (const h of hrefs.slice(1)) expect(h).toMatch(/^https:\/\//)
+    expect(hrefs).toHaveLength(5)
+    for (const h of hrefs) expect(h).toMatch(/^https:\/\//)
   })
 
   test('обо мне: таймлайн раскрывается по клику', async ({ page }) => {
     await page.goto('/about')
-    const first = page.locator('.mtl button').first()
+    const first = page.locator('.path-steps button').first()
     await first.click()
-    await expect(first).toHaveAttribute('aria-expanded', 'true')
+    await expect(first).toHaveAttribute('aria-selected', 'true')
+  })
+
+  test('тёмная тема включается, запоминается и действует на всех страницах', async ({ page }) => {
+    await page.goto('/about')
+    await expect(page.locator('html')).toHaveAttribute('data-theme', 'light')
+    await page.getByRole('button', { name: 'Switch to dark theme' }).first().click()
+    await expect(page.locator('html')).toHaveAttribute('data-theme', 'dark')
+    await page.goto('/music')
+    await expect(page.locator('html')).toHaveAttribute('data-theme', 'dark')
+    await page.reload()
+    await expect(page.locator('html')).toHaveAttribute('data-theme', 'dark')
+    await page.getByRole('button', { name: 'Switch to light theme' }).first().click()
+    await expect(page.locator('html')).toHaveAttribute('data-theme', 'light')
   })
 
   test('мобильное меню открывается и ведёт на страницу', async ({ page }) => {

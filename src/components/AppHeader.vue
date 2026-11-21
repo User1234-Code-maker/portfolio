@@ -6,6 +6,7 @@ import { hrefFor } from '../utils/links'
 import BrandMark from './BrandMark.vue'
 import LangSwitch from './LangSwitch.vue'
 import SocialLinks from './SocialLinks.vue'
+import ThemeToggle from './ThemeToggle.vue'
 
 const { t } = useLang()
 const route = useRoute()
@@ -44,6 +45,7 @@ watch(
     </nav>
     <div class="right">
       <SocialLinks />
+      <ThemeToggle />
       <LangSwitch />
       <a class="pill" :href="hrefFor('mail')">{{ t('talk') }}</a>
       <button

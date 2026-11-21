@@ -19,6 +19,18 @@
       media="(min-width: 701px)"
     />
     </template>
+    <template id="pre-day">
+      <link rel="preload" as="image" type="image/webp" fetchpriority="high" href="/src/assets/img/city-xs.webp" media="(max-width: 700px)" />
+      <link rel="preload" as="image" type="image/webp" fetchpriority="high" href="/src/assets/img/city.webp" media="(min-width: 701px)" />
+    </template>
+    <template id="pre-dusk">
+      <link rel="preload" as="image" type="image/webp" fetchpriority="high" href="/src/assets/img/city-dusk-xs.webp" media="(max-width: 700px)" />
+      <link rel="preload" as="image" type="image/webp" fetchpriority="high" href="/src/assets/img/city-dusk.webp" media="(min-width: 701px)" />
+    </template>
+    <template id="pre-night">
+      <link rel="preload" as="image" type="image/webp" fetchpriority="high" href="/src/assets/img/city-night-xs.webp" media="(max-width: 700px)" />
+      <link rel="preload" as="image" type="image/webp" fetchpriority="high" href="/src/assets/img/city-night.webp" media="(min-width: 701px)" />
+    </template>
     <link rel="preload" as="font" type="font/woff2" crossorigin href="/src/assets/fonts/manrope-latin-500-normal.woff2" />
     <link rel="preload" as="font" type="font/woff2" crossorigin href="/src/assets/fonts/manrope-latin-800-normal.woff2" />
     <title>Bogdan Korzun — Fullstack Developer &amp; Musician</title>
@@ -36,7 +48,7 @@
       /* страницу под заставкой не запираем через overflow:hidden: на iPhone в Telegram/Chrome после снятия
          этого запрета прокрутка начинала «пружинить» и отскакивать наверх. Заставка просто глотает касания. */
       #boot{touch-action:none;overscroll-behavior:contain}
-      #boot{position:fixed;inset:0;z-index:1000;overflow:hidden;background:linear-gradient(180deg,#D7E4FC,#E6E1F8);
+      #boot{position:fixed;inset:0;z-index:1000;overflow:hidden;background:linear-gradient(180deg,#D7E4FC,#E6E1F8);color-scheme:light;
         clip-path:inset(0 0 0 0);transition:clip-path .85s cubic-bezier(.7,0,.2,1);cursor:pointer}
       #boot.out{clip-path:inset(0 0 100% 0);pointer-events:none}
       #boot.out .b-center{opacity:0;transform:translateY(-24px) scale(.96);transition:opacity .35s,transform .5s}
@@ -60,6 +72,14 @@
         animation:bwipe .5s cubic-bezier(.6,0,.2,1) 1s forwards}
       .b-bar{position:relative!important;width:120px;height:3px;border-radius:3px;background:rgba(30,42,107,.14);overflow:hidden}
       .b-bar i{inset:0;background:#6B5BD6;transform-origin:left;transform:scaleX(0);animation:bbar 1.4s cubic-bezier(.4,0,.2,1) .1s forwards}
+      [data-theme=dark] #boot{background:linear-gradient(180deg,#070B26,#151A4C)}
+      [data-theme=dark] .b-grid line{stroke:rgba(120,140,255,.2)}
+      [data-theme=dark] .b-city path{stroke:rgba(140,150,255,.55)}
+      [data-theme=dark] .b-word{color:#E8EBFF}
+      [data-theme=dark] .b-bar{background:rgba(200,210,255,.16)}
+      [data-theme=dark] .b-bar i{background:linear-gradient(90deg,#5B7CFF,#A08BFF);box-shadow:0 0 10px #7C6CFF}
+      [data-theme=dark] .b-cloud{opacity:0;animation:none}
+      .boot-quick #boot *,.boot-quick #boot *::after{animation-delay:0s!important;animation-duration:.4s!important}
       @keyframes bdraw{to{stroke-dashoffset:0}}
       @keyframes bfill{to{fill:rgba(120,140,225,.16)}}
       @keyframes bfade{to{opacity:1}}
@@ -73,10 +93,31 @@
       (function () {
         var r = document.documentElement
         window.__bootT = performance.now()
+        // тема до первой отрисовки, чтобы не мигала светлая: сохранённый выбор, иначе светлая
+        try {
+          r.dataset.theme = localStorage.getItem('theme') === 'dark' ? 'dark' : 'light'
+        } catch (e) {
+          r.dataset.theme = 'light'
+        }
+        if (r.dataset.theme === 'dark') document.querySelector('meta[name=theme-color]').content = '#0B1030'
         // предзагрузка картинок Hero только на главной
         if (location.pathname === '%BASE_URL%' || location.pathname + '/' === '%BASE_URL%') {
           var t = document.getElementById('home-preloads')
           if (t) document.head.appendChild(t.content.cloneNode(true))
+        } else {
+          // на «Обо мне» самая крупная картинка — тот же персонаж, что на главной
+          if (/\/about\/?$/.test(location.pathname)) {
+            var ta = document.getElementById('home-preloads')
+            if (ta) document.head.appendChild(ta.content.cloneNode(true))
+          }
+          // внутренние страницы: сразу грузим фон сцены (это самая большая картинка первого экрана)
+          var dark = false
+          try {
+            dark = localStorage.getItem('theme') === 'dark'
+          } catch (e) {}
+          var mood = dark ? 'night' : /\/(music|contact)\/?$/.test(location.pathname) ? 'dusk' : 'day'
+          var pt = document.getElementById('pre-' + mood)
+          if (pt) document.head.appendChild(pt.content.cloneNode(true))
         }
         try {
           var seen = sessionStorage.getItem('boot-v1')
@@ -84,6 +125,8 @@
           var calm = matchMedia('(prefers-reduced-motion: reduce)').matches
           if ((seen && !forced) || calm) r.classList.add('no-boot')
           else r.classList.add('booting')
+          // уже видели заставку в прошлые заходы — короткая версия, без долгого «рисования»
+          if (localStorage.getItem('boot-seen') && !forced) r.classList.add('boot-quick')
         } catch (e) {
           r.classList.add('no-boot')
         }

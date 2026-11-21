@@ -57,53 +57,53 @@ describe('App', () => {
 
   it('страница проектов: фильтр категорий оставляет только нужные карточки', async () => {
     const w = await open('/projects')
-    const all = w.findAll('.pcard').length
+    const all = w.findAll('.gal-card').length
     expect(all).toBeGreaterThanOrEqual(4)
     await w
       .findAll('.fchip')
       .find((b) => b.text().startsWith('Telegram'))!
       .trigger('click')
     await flushPromises()
-    await vi.waitFor(() => expect(w.findAll('.pcard').length).toBe(1))
-    expect(w.findAll('.pcard').length).toBeLessThan(all)
+    await vi.waitFor(() => expect(w.findAll('.gal-card').length).toBe(1))
+    expect(w.findAll('.gal-card').length).toBeLessThan(all)
   })
 
   it('у примеров нет внешних ссылок, у настоящего проекта есть', async () => {
     const w = await open('/projects')
-    const cards = w.findAll('.pcard')
+    const cards = w.findAll('.gal-card')
     const real = cards.find((c) => c.text().includes('Game Studio'))!
     expect(real.findAll('a[href^="https://"]').length).toBe(2)
-    for (const c of cards.filter((x) => x.find('.badge').exists())) {
+    for (const c of cards.filter((x) => x.find('.gal-badge').exists())) {
       expect(c.findAll('a[href^="https://"]').length).toBe(0)
     }
   })
 
   it('неизвестный проект показывает 404', async () => {
     const w = await open('/projects/nothing')
-    expect(w.find('.nf-code').exists()).toBe(true)
+    expect(w.find('.nf-num').exists()).toBe(true)
   })
 
   it('контакты: копирование почты пишет в буфер и показывает подтверждение', async () => {
     const writeText = vi.fn().mockResolvedValue(undefined)
     Object.assign(navigator, { clipboard: { writeText } })
     const w = await open('/contact')
-    await w.get('.copy-btn').trigger('click')
+    await w.get('.ct-copy').trigger('click')
     await flushPromises()
     expect(writeText).toHaveBeenCalledWith('bogdan.korzun2003@gmail.com')
-    expect(w.get('.copy-btn').classes()).toContain('ok')
+    expect(w.get('.ct-copy').classes()).toContain('ok')
   })
 
   it('контакты: если буфер недоступен, показывается подсказка', async () => {
     Object.assign(navigator, { clipboard: { writeText: vi.fn().mockRejectedValue(new Error('no')) } })
     const w = await open('/contact')
-    await w.get('.copy-btn').trigger('click')
+    await w.get('.ct-copy').trigger('click')
     await flushPromises()
     expect(w.find('[role="alert"]').exists()).toBe(true)
   })
 
   it('музыка: показан альбом с треклистом, у каждого трека есть кнопка-строка для запуска', async () => {
     const w = await open('/music')
-    expect(w.get('.mx-card h2').text()).toBe('1234')
+    expect(w.get('.mu-player h2').text()).toBe('1234')
     expect(w.findAll('.tl-row').length).toBe(10)
     expect(w.find('iframe').exists()).toBe(false)
     expect(w.findAll('.tl-main').length).toBe(10)

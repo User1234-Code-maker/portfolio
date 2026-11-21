@@ -1,12 +1,13 @@
 <script setup lang="ts">
 import { computed, onBeforeUnmount, ref } from 'vue'
-import PageHead from '../components/PageHead.vue'
 import PageShell from '../components/PageShell.vue'
+import SceneEyebrow from '../components/SceneEyebrow.vue'
+import ToriiArt from '../components/ToriiArt.vue'
+import UiIcon from '../components/UiIcon.vue'
 import { useLang } from '../composables/useLang'
 import { site } from '../data/site'
 import { socials } from '../data/socials'
 import { vReveal } from '../directives/reveal'
-import { vTilt } from '../directives/tilt'
 import { hrefFor } from '../utils/links'
 
 const { t } = useLang()
@@ -28,87 +29,75 @@ onBeforeUnmount(() => window.clearTimeout(timer))
 const message = computed(() =>
   state.value === 'ok' ? t('c_copied') : state.value === 'fail' ? t('c_copy_fail') : '',
 )
-const channels = computed(() => [
-  { key: 'mail', label: 'Email', value: site.contacts.email, href: hrefFor('mail'), ext: false },
-  ...socials.map((s) => ({
-    key: s.key,
-    label: s.label,
-    value: '',
+// номер телефона WhatsApp не выводим текстом, только ссылкой
+// у каждой площадки свой фирменный оттенок для подсветки при наведении
+const tint: Record<string, string> = {
+  telegram: '#2AA3EF',
+  github: '#8B7CF6',
+  linkedin: '#0A84D0',
+  whatsapp: '#25C26A',
+  soundcloud: '#FF6A1A',
+}
+const handle = (url: string) => url.replace(/^https?:\/\/(www\.)?/, '').replace(/\/$/, '')
+const channels = computed(() =>
+  socials.map((s) => ({
+    ...s,
     href: hrefFor(s.key),
-    ext: true,
-    path: s.path,
+    tint: tint[s.key],
+    sub: s.key === 'whatsapp' ? t('c_open') : handle(hrefFor(s.key)),
   })),
-])
+)
 </script>
 
 <template>
-  <PageShell>
-    <PageHead :title="t('c_big')" :lead="t('c_lead')" jp="連絡先">
-      <div class="cta-row">
-        <a class="pill big" :href="hrefFor('mail')">{{ t('c_mail') }} <span aria-hidden="true">→</span></a>
-        <button type="button" class="copy-btn" :class="state" @click="copy">
-          <span class="ck" aria-hidden="true">
-            <svg
-              viewBox="0 0 24 24"
-              width="18"
-              height="18"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="2.4"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-            >
-              <rect class="c-copy" x="8" y="8" width="12" height="12" rx="3" />
-              <path class="c-copy" d="M16 8V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h2" />
-              <path class="c-ok" d="m5 13 4.5 4.5L19 7" pathLength="1" />
-            </svg>
-          </span>
+  <PageShell name="contact" jp="連絡先" mood="dusk">
+    <template #decor>
+      <ToriiArt />
+      <span class="ct-lantern l1"></span><span class="ct-lantern l2"></span
+      ><span class="ct-lantern l3"></span>
+    </template>
+    <template #hero>
+      <SceneEyebrow :text="t('c_title')" />
+      <h1 class="sc-title">{{ t('c_big') }}</h1>
+      <p class="sc-lead">{{ t('c_lead') }}</p>
+      <!-- почта: главный способ связи — крупно, с копированием -->
+      <div class="ct-mail glass">
+        <span class="ct-mail-ic"><UiIcon name="mail" :size="22" /></span>
+        <a class="ct-mail-addr" :href="hrefFor('mail')">{{ site.contacts.email }}</a>
+        <button type="button" class="ct-copy" :class="state" @click="copy">
+          <UiIcon :name="state === 'ok' ? 'check' : 'copy'" :size="18" />
           <span>{{ state === 'ok' ? t('c_copied') : t('c_copy') }}</span>
         </button>
       </div>
       <p class="sr-only" role="status" aria-live="polite">{{ message }}</p>
-      <p v-if="state === 'fail'" class="note" role="alert">{{ t('c_copy_fail') }}</p>
-    </PageHead>
+      <p v-if="state === 'fail'" class="ct-fail" role="alert">{{ t('c_copy_fail') }}</p>
+      <div class="sc-actions">
+        <a class="pill" :href="hrefFor('mail')">{{ t('c_mail') }} <UiIcon name="arrow" :size="18" /></a>
+        <span class="avail"><i></i>{{ t('a_open') }}</span>
+      </div>
+    </template>
 
-    <section class="wrap sec-tight" aria-labelledby="ch-t">
-      <h2 id="ch-t" class="h2">{{ t('c_channels') }}</h2>
-      <div v-reveal class="channels stagger">
-        <a
+    <section class="wrap blk-first" aria-labelledby="ch-t">
+      <h2 id="ch-t" class="blk-h">{{ t('c_channels') }}</h2>
+      <ul v-reveal class="ct-grid stagger">
+        <li
           v-for="(c, i) in channels"
           :key="c.key"
-          v-tilt
-          class="chan tilt"
-          :href="c.href"
-          :target="c.ext ? '_blank' : undefined"
-          :rel="c.ext ? 'noopener' : undefined"
-          :style="{ '--i': i }"
+          :class="`ct-${c.key}`"
+          :style="{ '--i': i, '--tint': c.tint }"
         >
-          <span class="chan-ic" aria-hidden="true">
-            <svg
-              v-if="c.key === 'mail'"
-              viewBox="0 0 24 24"
-              width="24"
-              height="24"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="2"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-            >
-              <rect x="3" y="5" width="18" height="14" rx="2.5" />
-              <path d="m3.5 7.5 8.5 6 8.5-6" />
-            </svg>
-            <svg v-else viewBox="0 0 24 24" width="24" height="24" fill="currentColor">
-              <path :d="'path' in c ? c.path : ''" />
-            </svg>
-          </span>
-          <span class="chan-t">
-            <b>{{ c.label }}</b>
-            <small>{{ c.value || t('c_open') }}</small>
-          </span>
-          <span class="chan-go" aria-hidden="true">↗</span>
-        </a>
-      </div>
+          <a class="ct-card" :href="c.href" target="_blank" rel="noopener">
+            <span class="ct-ic" aria-hidden="true">
+              <svg viewBox="0 0 24 24" width="26" height="26" fill="currentColor"><path :d="c.path" /></svg>
+            </span>
+            <span class="ct-txt">
+              <b>{{ c.label }}</b>
+              <small>{{ c.sub }}</small>
+            </span>
+            <span class="ct-go" aria-hidden="true"><UiIcon name="ext" :size="18" /></span>
+          </a>
+        </li>
+      </ul>
     </section>
   </PageShell>
 </template>

@@ -1,6 +1,8 @@
 // Заставка живёт в index.html (рисуется до загрузки скриптов). Здесь только решаем, когда её убрать:
 // не раньше, чем доиграет «рисование», и не позже жёсткого потолка.
 const MIN_MS = 1500
+// повторные заходы: заставка короткая, ровно чтобы мелькнул знак, без искусственного ожидания
+const QUICK_MS = 450
 const MAX_MS = 2600
 
 export const BOOT_KEY = 'boot-v1'
@@ -20,7 +22,8 @@ export function finishBoot() {
   }
 
   const started = Number((window as unknown as { __bootT?: number }).__bootT) || performance.now()
-  const hero = document.querySelector<HTMLImageElement>('.l-char img.main')
+  // ждём главную картинку страницы: персонажа на главной или первую картинку сцены на остальных
+  const hero = document.querySelector<HTMLImageElement>('.l-char img.main, .sc-art img, .sc-city')
   let closed = false
 
   const close = () => {
@@ -28,6 +31,7 @@ export function finishBoot() {
     closed = true
     try {
       sessionStorage.setItem(BOOT_KEY, '1')
+      localStorage.setItem('boot-seen', '1')
     } catch {
       /* без sessionStorage заставка просто покажется снова */
     }
@@ -36,7 +40,8 @@ export function finishBoot() {
     window.setTimeout(() => el.remove(), 900)
   }
 
-  const wait = Math.max(0, MIN_MS - (performance.now() - started))
+  const min = root.classList.contains('boot-quick') ? QUICK_MS : MIN_MS
+  const wait = Math.max(0, min - (performance.now() - started))
   Promise.race([ready(hero), new Promise((r) => setTimeout(r, MAX_MS - 400))]).then(() =>
     setTimeout(close, wait),
   )
